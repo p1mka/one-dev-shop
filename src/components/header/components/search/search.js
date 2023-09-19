@@ -5,7 +5,7 @@ const SearchContainer = ({ className }) => {
   return (
     <div className={className}>
       <input placeholder="Поиск по названию"></input>
-      <Icon id="la-search" size="24px" margin="0 0.2rem 0 0" rotate />
+      <Icon id="la-search" size="24px" margin="0 0.2rem 0 0" rotate="true" />
     </div>
   );
 };
