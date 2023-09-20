@@ -1,11 +1,11 @@
-import { Button, Input, ModalWindow, AuthFormError } from "../../components";
+import { AuthFormError, Button, Input, ModalWindow } from "../../components";
 import { useForm } from "react-hook-form";
-import { authSchema } from "../utils";
+import { regSchema } from "../utils";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-const AuthorizeContainter = ({ className }) => {
+const RegistrationContainter = ({ className }) => {
   const {
     register,
     handleSubmit,
@@ -15,11 +15,15 @@ const AuthorizeContainter = ({ className }) => {
     defaultValues: {
       login: "",
       password: "",
+      passwordCheck: "",
     },
-    resolver: yupResolver(authSchema),
+    resolver: yupResolver(regSchema),
   });
   const navigate = useNavigate();
-  const formError = errors?.login?.message || errors?.password?.message;
+  const formError =
+    errors?.login?.message ||
+    errors?.password?.message ||
+    errors?.passwordCheck?.message;
   const error = formError;
 
   const onFormSubmit = ({ login, password }) => {
@@ -30,13 +34,18 @@ const AuthorizeContainter = ({ className }) => {
 
   return (
     <div className={className}>
-      <ModalWindow title="Авторизация">
+      <ModalWindow title="Регистрация">
         <form onSubmit={handleSubmit(onFormSubmit)}>
           <Input type="text" placeholder="Логин" {...register("login")} />
           <Input
             type="password"
             placeholder="Пароль"
             {...register("password")}
+          />
+          <Input
+            type="password"
+            placeholder="Повтор пароля"
+            {...register("passwordCheck")}
           />
           <Button
             includeIcon={false}
@@ -49,20 +58,12 @@ const AuthorizeContainter = ({ className }) => {
 
           {!!error && <AuthFormError>{error}</AuthFormError>}
         </form>
-        <div className="registration-question-block">
-          Еще не зарегистрированы?
-          <Link to="/registration">
-            <Button includeIcon={false} margin="0 0.5rem" padding="0.5rem 2rem">
-              Регистрация!
-            </Button>
-          </Link>
-        </div>
       </ModalWindow>
     </div>
   );
 };
 
-export const Authorize = styled(AuthorizeContainter)`
+export const Registration = styled(RegistrationContainter)`
   display: flex;
 
   & input {
@@ -75,14 +76,5 @@ export const Authorize = styled(AuthorizeContainter)`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-  }
-
-  & .registration-question-block {
-    display: flex;
-    align-items: center;
-    margin-top: 5%;
-  }
-  & a {
-    text-decoration: none;
   }
 `;

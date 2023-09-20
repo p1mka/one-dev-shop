@@ -1,4 +1,4 @@
-import { UserBar, Logo, Menu, Search } from "./components";
+import { UserBar, Logo, Menu, Search } from "./header/components";
 import styled from "styled-components";
 
 export const HeaderContainer = ({ className }) => {

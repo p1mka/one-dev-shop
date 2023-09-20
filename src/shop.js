@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { Footer, Header } from "./components";
-import { Authorize } from "./pages";
+import { Authorize, Registration } from "./pages";
 import styled from "styled-components";
 
 const AppColumn = styled.div`
@@ -24,7 +24,7 @@ function Shop() {
         <Routes>
           <Route path="/" element={<div>Главная</div>} />
           <Route path="/authorize" element={<Authorize />} />
-          <Route path="/registration" element={<div>Регистрация</div>} />
+          <Route path="/registration" element={<Registration />} />
           <Route path="*" element={<div>Ошибка</div>} />
         </Routes>
       </Page>

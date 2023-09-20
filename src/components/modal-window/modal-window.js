@@ -1,27 +1,40 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Icon } from "../icon/icon";
 
 const ModalWindowContainer = ({ className, title, children }) => {
   const [modalIsOpen, setModalIsOpen] = useState(true);
   const navigate = useNavigate();
+  const regPageMatch = useMatch("/registration");
 
   const onClose = () => {
     navigate("/");
     setModalIsOpen(false);
+  };
+  const onReturn = () => {
+    navigate(-1);
   };
 
   return !modalIsOpen ? null : (
     <div className={className} onClick={onClose}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <h3 className="modal-title">{title}</h3>
+        {regPageMatch && (
+          <Icon
+            id="la-undo"
+            className="modal-back"
+            size="18px"
+            onClick={onReturn}
+          />
+        )}
         <Icon
           id="la-times"
           className="modal-close"
           size="18px"
           onClick={onClose}
         />
+
         <div className="modal-content">{children}</div>
       </div>
     </div>
@@ -64,6 +77,14 @@ export const ModalWindow = styled(ModalWindowContainer)`
     animation-duration: 0.5s;
   }
 
+  .modal-back {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    right: 18px;
+    background: #f3f2f1;
+    border-radius: 10% 0 10% 10%;
+  }
   .modal-close {
     position: absolute;
     cursor: pointer;
