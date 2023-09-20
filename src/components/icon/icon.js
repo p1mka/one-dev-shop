@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 const IconContainer = ({
   className,
+  children,
   id,
   fill = false,
   social = false,
@@ -10,7 +11,7 @@ const IconContainer = ({
   const iconFill = fill ? "lar" : social ? "lab" : "las";
   return (
     <div className={className} {...props}>
-      <i className={`${iconFill} ${id}`} />
+      <i className={`${iconFill} ${id}`}>{children}</i>
     </div>
   );
 };

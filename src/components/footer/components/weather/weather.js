@@ -8,7 +8,7 @@ const WeatherContainer = ({ className }) => {
 
   useEffect(() => {
     fetch(
-      `https://api.openweathermap.org/data/2.5/weather?q=moscow&lang=ru&units=metric&appid=e3d189f7db1b726b9ed6964cbef557c3`
+      `https://api.openweathermap.org/data/2.5/weather?q=nizhniy novgorod&lang=ru&units=metric&appid=e3d189f7db1b726b9ed6964cbef557c3`
     )
       .then((res) => res.json())
       .then(({ main, name, weather }) => {
