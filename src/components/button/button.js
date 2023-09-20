@@ -16,16 +16,20 @@ const ButtonContainer = ({
 );
 
 export const Button = styled(ButtonContainer)`
+  width: ${({ width }) => width};
   cursor: pointer;
   display: flex;
   align-items: center;
-  margin: ${({ margin = 0 }) => margin};
+  justify-content: center;
+  margin: ${({ margin = "0" }) => margin};
   padding: ${({ padding = "0.2rem 1rem;" }) => padding};
   gap: ${({ gap }) => (gap ? gap : "1rem")};
   border-radius: 0.25rem;
-  border: none;
-  background: ${({ disabled }) => (disabled ? "#2f9ca385" : "#2f9ca3")};
-  color: white;
-  font-size: 14px;
-  font-weight: ${({ bold }) => (bold ? "bold" : "normal")};
+  border: ${({ border = "none" }) => border};
+  background: ${({ disabled, background }) =>
+    disabled ? "#2f9ca385" : background ? background : "#2f9ca3"};
+  color: ${({ color = "white" }) => color};
+  font-size: ${({ fontSize = "14px" }) => fontSize};
+  font-weight: ${({ bold, fontWeight = "400" }) =>
+    bold ? "bold" : fontWeight};
 `;

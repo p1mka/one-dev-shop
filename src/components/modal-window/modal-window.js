@@ -22,16 +22,16 @@ const ModalWindowContainer = ({ className, title, children }) => {
         <h3 className="modal-title">{title}</h3>
         {regPageMatch && (
           <Icon
-            id="la-undo"
+            id="la-arrow-circle-left"
             className="modal-back"
-            size="18px"
+            size="24px"
             onClick={onReturn}
           />
         )}
         <Icon
-          id="la-times"
+          id="la-times-circle"
           className="modal-close"
-          size="18px"
+          size="24px"
           onClick={onClose}
         />
 
@@ -81,7 +81,7 @@ export const ModalWindow = styled(ModalWindowContainer)`
     position: absolute;
     cursor: pointer;
     top: 0;
-    right: 18px;
+    right: 24px;
     background: #f3f2f1;
     border-radius: 10% 0 10% 10%;
   }

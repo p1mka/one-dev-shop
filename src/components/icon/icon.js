@@ -22,7 +22,7 @@ export const Icon = styled(IconContainer)`
   color: ${({ color }) => color};
   transform: ${({ rotate }) => (rotate ? "rotate(270deg" : "default")});
 
-  & hover {
+  & :hover {
     cursor: pointer;
   }
 `;
