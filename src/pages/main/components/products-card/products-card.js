@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { ProductCard } from "./product-card/product-card";
-import styled from "styled-components";
 import { Icon } from "../../../../components";
+import styled from "styled-components";
 
 const ProductsCardContainer = ({ className, products, header }) => {
   return (
@@ -13,7 +13,7 @@ const ProductsCardContainer = ({ className, products, header }) => {
         </Link>
       </div>
       <div className="products-row">
-        {products.map(({ id, img, title, price, rating }) => {
+        {products.map(({ id, img, title, price, rating, discount }) => {
           return (
             <ProductCard
               key={id}
@@ -22,6 +22,7 @@ const ProductsCardContainer = ({ className, products, header }) => {
               img={img}
               price={price}
               rating={rating}
+              discount={discount}
             />
           );
         })}
@@ -31,11 +32,11 @@ const ProductsCardContainer = ({ className, products, header }) => {
 };
 
 export const ProductsCard = styled(ProductsCardContainer)`
+  font-family: rubik;
   width: 100%;
   display: flex;
   flex-direction: column;
   margin: 2rem 0;
-  cursor: pointer;
 
   & .header-row {
     display: flex;
@@ -50,7 +51,6 @@ export const ProductsCard = styled(ProductsCardContainer)`
   }
 
   & a {
-    text-decoration: none;
     display: flex;
     align-items: center;
   }

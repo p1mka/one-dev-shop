@@ -1,4 +1,4 @@
-import { Button, Input, ModalWindow, AuthFormError } from "../../components";
+import { AuthFormError, Button, Input, ModalWindow } from "../../components";
 import { useForm } from "react-hook-form";
 import { authSchema } from "../utils";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -30,34 +30,30 @@ const AuthorizeContainter = ({ className }) => {
 
   return (
     <div className={className}>
-      <ModalWindow title="Авторизация">
-        <form onSubmit={handleSubmit(onFormSubmit)}>
-          <Input type="text" placeholder="Логин" {...register("login")} />
-          <Input
-            type="password"
-            placeholder="Пароль"
-            {...register("password")}
-          />
-          <Button
-            includeIcon={false}
-            padding="0.5rem 5rem"
-            type="submit"
-            disabled={!!formError}
-          >
-            Войти!
-          </Button>
+      {/* <ModalWindow title="Авторизация"> */}
+      <form onSubmit={handleSubmit(onFormSubmit)}>
+        <Input type="text" placeholder="Логин" {...register("login")} />
+        <Input type="password" placeholder="Пароль" {...register("password")} />
+        <Button
+          includeIcon={false}
+          padding="0.5rem 5rem"
+          type="submit"
+          disabled={!!formError}
+        >
+          Войти!
+        </Button>
 
-          {!!error && <AuthFormError>{error}</AuthFormError>}
-        </form>
-        <div className="registration-question-block">
-          Еще не зарегистрированы?
-          <Link to="/registration">
-            <Button includeIcon={false} margin="0 0.5rem" padding="0.5rem 2rem">
-              Регистрация!
-            </Button>
-          </Link>
-        </div>
-      </ModalWindow>
+        {!!error && <AuthFormError>{error}</AuthFormError>}
+      </form>
+      <div className="registration-question-block">
+        Еще не зарегистрированы?
+        <Link to="/registration">
+          <Button includeIcon={false} margin="0 0.5rem" padding="0.5rem 2rem">
+            Регистрация!
+          </Button>
+        </Link>
+      </div>
+      {/* </ModalWindow> */}
     </div>
   );
 };
@@ -81,8 +77,5 @@ export const Authorize = styled(AuthorizeContainter)`
     display: flex;
     align-items: center;
     margin-top: 5%;
-  }
-  & a {
-    text-decoration: none;
   }
 `;

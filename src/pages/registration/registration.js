@@ -34,31 +34,27 @@ const RegistrationContainter = ({ className }) => {
 
   return (
     <div className={className}>
-      <ModalWindow title="Регистрация">
-        <form onSubmit={handleSubmit(onFormSubmit)}>
-          <Input type="text" placeholder="Логин" {...register("login")} />
-          <Input
-            type="password"
-            placeholder="Пароль"
-            {...register("password")}
-          />
-          <Input
-            type="password"
-            placeholder="Повтор пароля"
-            {...register("passwordCheck")}
-          />
-          <Button
-            includeIcon={false}
-            padding="0.5rem 5rem"
-            type="submit"
-            disabled={!!formError}
-          >
-            Войти!
-          </Button>
+      {/* <ModalWindow title="Регистрация"> */}
+      <form onSubmit={handleSubmit(onFormSubmit)}>
+        <Input type="text" placeholder="Логин" {...register("login")} />
+        <Input type="password" placeholder="Пароль" {...register("password")} />
+        <Input
+          type="password"
+          placeholder="Повтор пароля"
+          {...register("passwordCheck")}
+        />
+        <Button
+          includeIcon={false}
+          padding="0.5rem 5rem"
+          type="submit"
+          disabled={!!formError}
+        >
+          Зарегистрироваться
+        </Button>
 
-          {!!error && <AuthFormError>{error}</AuthFormError>}
-        </form>
-      </ModalWindow>
+        {!!error && <AuthFormError>{error}</AuthFormError>}
+      </form>
+      {/* </ModalWindow> */}
     </div>
   );
 };

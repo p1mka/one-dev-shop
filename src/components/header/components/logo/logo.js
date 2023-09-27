@@ -41,8 +41,4 @@ export const Logo = styled(LogoContainer)`
     letter-spacing: -0.5px;
     text-shadow: 0px 3px 2px rgba(0, 0, 0, 0.25);
   }
-
-  & a {
-    text-decoration: none;
-  }
 `;

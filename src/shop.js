@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import { Footer, Header } from "./components";
 import { Authorize, Main, Registration } from "./pages";
 import styled from "styled-components";
+import { Product } from "./pages/product/product";
 
 const AppColumn = styled.div`
   display: flex;
@@ -13,7 +14,7 @@ const AppColumn = styled.div`
 const Page = styled.div`
   display: flex;
   flex: 1 0 auto;
-  padding: 1% 10%;
+  padding: 0.5rem 10%;
 `;
 
 function Shop() {
@@ -25,6 +26,8 @@ function Shop() {
           <Route path="/" element={<Main />} />
           <Route path="/authorize" element={<Authorize />} />
           <Route path="/registration" element={<Registration />} />
+          <Route path="/products" element={<div>Продукты</div>} />
+          <Route path="/product/:id" element={<Product />} />
           <Route path="*" element={<div>Ошибка</div>} />
         </Routes>
       </Page>

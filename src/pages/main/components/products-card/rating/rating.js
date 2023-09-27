@@ -26,4 +26,7 @@ export const Rating = styled(RatingContainer)`
   & .filled {
     color: gray;
   }
+  & .filled:hover {
+    color: #eb4aae;
+  }
 `;

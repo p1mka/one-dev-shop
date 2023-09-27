@@ -1,57 +1,21 @@
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Loader } from "../../components";
 import { ProductsCard } from "./components";
+import { PRODUCTS_MOCK } from "../../products-mock";
 import styled from "styled-components";
-
-const PRODUCTS_MOCK = [
-  {
-    id: "001",
-    img: "https://loremflickr.com/cache/resized/7288_28199796685_7757ee2460_n_280_150_nofilter.jpg",
-    title: "Товар 0",
-    description: "Описание товара",
-    price: "999,99 ",
-    rating: "5",
-  },
-  {
-    id: "002",
-    img: "https://loremflickr.com/cache/resized/65535_52682151570_91793b7a9a_n_280_150_nofilter.jpg",
-    title: "Товар 1",
-    description: "Описание товара",
-    price: "999,99 ",
-    rating: "3",
-  },
-  {
-    id: "003",
-    img: "https://loremflickr.com/cache/resized/65535_52700336072_7c9b11af70_n_280_150_nofilter.jpg",
-    title: "Товар 2",
-    description: "Описание товара",
-    price: "999,99 ",
-    rating: "1",
-  },
-  {
-    id: "004",
-    img: "https://loremflickr.com/cache/resized/65535_52264054596_faf342d6f3_n_280_150_nofilter.jpg",
-    title: "Товар 3",
-    description: "Описание товара",
-    price: "999,99 ",
-    rating: "0",
-  },
-  {
-    id: "005",
-    img: "https://loremflickr.com/cache/resized/65535_52313481544_4bf829068e_z_280_150_nofilter.jpg",
-    title: "Товар 4",
-    description: "Описание товара",
-    price: "999,99 ",
-    rating: "4",
-  },
-];
+import { selectIsLoading } from "../../selectors";
+import { setIsLoading } from "../../actions";
 
 const MainContainer = ({ className }) => {
   const [products, setProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+  const isLoading = useSelector(selectIsLoading);
+  console.log(isLoading);
 
   useEffect(() => {
-    setIsLoading(true);
+    dispatch(setIsLoading(true));
     new Promise((resolve) => {
       setTimeout(() => {
         resolve({ json: () => PRODUCTS_MOCK });
@@ -59,8 +23,8 @@ const MainContainer = ({ className }) => {
     })
       .then((loadedData) => loadedData.json())
       .then((loadedProducts) => setProducts(loadedProducts))
-      .finally(() => setIsLoading(false));
-  }, []);
+      .finally(() => dispatch(setIsLoading(false)));
+  }, [dispatch]);
 
   return (
     <div className={className}>
@@ -68,8 +32,14 @@ const MainContainer = ({ className }) => {
         <Loader />
       ) : (
         <>
-          <ProductsCard products={products} header={"Товары"} />
-          <ProductsCard products={products} header={"Акции"} />
+          <ProductsCard
+            products={products.filter((product) => product.rating > 2)}
+            header={"Лучшее"}
+          />
+          <ProductsCard
+            products={products.filter((product) => product.discount > 0)}
+            header={"Скидки"}
+          />
           <ProductsCard products={products} header={"Новинки"} />
           <ProductsCard products={products} header={"Коты"} />
         </>
