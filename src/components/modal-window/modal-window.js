@@ -1,43 +1,46 @@
-import { useState } from "react";
-import { useMatch, useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import { Outlet, useNavigate } from "react-router-dom";
 import { Icon } from "../icon/icon";
+import { useDispatch, useSelector } from "react-redux";
+import { setIsModalOpen } from "../../store/actions";
+import { selectIsModalOpen } from "../../store/selectors";
+import styled from "styled-components";
 
-const ModalWindowContainer = ({ className, title, children }) => {
-  const [modalIsOpen, setModalIsOpen] = useState(true);
+const ModalWindowContainer = ({ className }) => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const regPageMatch = useMatch("/registration");
+  const isModalOpen = useSelector(selectIsModalOpen);
 
   const onClose = () => {
     navigate("/");
-    setModalIsOpen(false);
+    dispatch(setIsModalOpen(false));
   };
   const onReturn = () => {
-    navigate(-1);
+    navigate("/authorize");
   };
 
-  return !modalIsOpen ? null : (
-    <div className={className} onClick={onClose}>
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
-        <h3 className="modal-title">{title}</h3>
-        {regPageMatch && (
+  return (
+    isModalOpen && (
+      <div className={className} onClick={onClose}>
+        <div className="modal" onClick={(e) => e.stopPropagation()}>
           <Icon
             id="la-arrow-circle-left"
             className="modal-back"
             size="24px"
             onClick={onReturn}
           />
-        )}
-        <Icon
-          id="la-times-circle"
-          className="modal-close"
-          size="24px"
-          onClick={onClose}
-        />
+          <Icon
+            id="la-times-circle"
+            className="modal-close"
+            size="24px"
+            onClick={onClose}
+          />
 
-        <div className="modal-content">{children}</div>
+          <div className="modal-content">
+            <Outlet />
+          </div>
+        </div>
       </div>
-    </div>
+    )
   );
 };
 
@@ -48,7 +51,7 @@ export const ModalWindow = styled(ModalWindowContainer)`
   left: 0;
   right: 0;
   width: 100%;
-  z-index: 90;
+  z-index: 500;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -66,7 +69,7 @@ export const ModalWindow = styled(ModalWindowContainer)`
     width: 50%;
     max-width: 550px;
     background: white;
-    margin: 0 20px;
+    border-radius: 0.25rem;
     max-height: calc(100vh - 40px);
     text-align: center;
     overflow: hidden;

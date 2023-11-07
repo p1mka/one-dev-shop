@@ -1,4 +1,0 @@
-export const ACTION_TYPE = {
-  SET_PRODUCTS: "SET_PRODUCTS",
-  SET_IS_LOADING: "SET_IS_LOADING",
-};

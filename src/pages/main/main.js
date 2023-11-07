@@ -2,32 +2,29 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Loader } from "../../components";
 import { ProductsCard } from "./components";
-import { PRODUCTS_MOCK } from "../../products-mock";
+import { request } from "../../utils";
+import { selectIsLoading } from "../../store/selectors";
+import { setIsLoading } from "../../store/actions";
+import { Outlet } from "react-router-dom";
 import styled from "styled-components";
-import { selectIsLoading } from "../../selectors";
-import { setIsLoading } from "../../actions";
 
 const MainContainer = ({ className }) => {
   const [products, setProducts] = useState([]);
-  // const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const isLoading = useSelector(selectIsLoading);
-  console.log(isLoading);
 
   useEffect(() => {
     dispatch(setIsLoading(true));
-    new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({ json: () => PRODUCTS_MOCK });
-      }, 1500);
-    })
-      .then((loadedData) => loadedData.json())
-      .then((loadedProducts) => setProducts(loadedProducts))
+    request("/products")
+      .then(({ error, data }) => {
+        return setProducts(data);
+      })
       .finally(() => dispatch(setIsLoading(false)));
   }, [dispatch]);
 
   return (
     <div className={className}>
+      <Outlet />
       {isLoading ? (
         <Loader />
       ) : (

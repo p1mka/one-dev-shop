@@ -1,14 +1,12 @@
 import styled from "styled-components";
 
-const LoaderContainer = ({ className }) => {
-  return (
-    <div className={className}>
-      <div className="loader"></div>
-    </div>
-  );
-};
+const SimpleLoaderContainer = ({ className }) => (
+  <div className={className}>
+    <div className="loader"></div>
+  </div>
+);
 
-export const Loader = styled(LoaderContainer)`
+export const SimpleLoader = styled(SimpleLoaderContainer)`
   width: 100%;
   height: 100%;
   position: fixed;
@@ -27,14 +25,14 @@ export const Loader = styled(LoaderContainer)`
     border-radius: 50%;
     border-left-color: #2f9ca3;
     animation: loader 1s infinite;
+  }
 
-    @keyframes loader {
-      0% {
-        transform: rotate(0deg);
-      }
-      100% {
-        transform: rotate(360deg);
-      }
+  @keyframes loader {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
     }
   }
 `;

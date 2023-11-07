@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Rating } from "../rating/rating";
 import styled from "styled-components";
 import { Button } from "../../../../../components";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const ProductCardContainer = ({
   className,
@@ -24,10 +24,12 @@ const ProductCardContainer = ({
 
   return (
     <div className={className}>
-      <Link to={`product/${id}`}>
-        <img src={img} alt={id} />
-      </Link>
-      {discount > 0 && <div className="discount-block">-{discount}%</div>}
+      <div className="product-image">
+        <Link to={`product/${id}`}>
+          <img src={img} alt="Картинка в пути..." />
+        </Link>
+        {discount > 0 && <div className="discount-block">-{discount}%</div>}
+      </div>
       <div className="product-content">
         <div className="product-price">
           {discount > 0 ? (
@@ -59,13 +61,22 @@ const ProductCardContainer = ({
 };
 
 export const ProductCard = styled(ProductCardContainer)`
-  position: relative;
+  min-width: 280px;
+  width: auto;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   border-radius: 0.25rem;
   background: #fff;
-  box-shadow: 1px 2px 4px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: 5px 3px 6px 0px rgba(0, 0, 0, 0.1);
   font-family: rubik;
+
+  & .product-image {
+    position: relative;
+    min-width: 100%;
+    height: 150px;
+    display: flex;
+  }
 
   & .discount-block {
     position: absolute;
@@ -102,8 +113,5 @@ export const ProductCard = styled(ProductCardContainer)`
   }
   & .product-info-and-button {
     margin: 1.5rem 0 0 0;
-  }
-  & img {
-    border-radius: 0.25rem 0.25rem 0 0;
   }
 `;

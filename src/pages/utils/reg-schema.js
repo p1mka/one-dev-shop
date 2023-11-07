@@ -1,6 +1,10 @@
 import * as yup from "yup";
 
 export const regSchema = yup.object().shape({
+  email: yup
+    .string()
+    .required("E-mail должен быть заполнен!")
+    .email("Неверный формат e-mail"),
   login: yup
     .string()
     .required("Логин должен быть заполнен")

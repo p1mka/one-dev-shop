@@ -36,18 +36,26 @@ export const ProductsCard = styled(ProductsCardContainer)`
   width: 100%;
   display: flex;
   flex-direction: column;
-  margin: 2rem 0;
+  margin: 3rem 0;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0px 3px 7px 0px rgba(0, 0, 0, 0.25);
 
   & .header-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    background: #fff;
+    border-radius: 0.25rem;
+    padding: 0 1rem;
+    box-shadow: 0px 0px 6px 0px #767676;
   }
 
   & .products-row {
     overflow: scroll;
     display: flex;
     gap: 2rem;
+    padding: 2rem 0 1rem 0;
   }
 
   & a {
