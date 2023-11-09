@@ -1,5 +1,5 @@
-import { Icon } from "../../../../../components";
 import styled from "styled-components";
+import { Icon } from "../icon/icon";
 
 const RatingContainer = ({ className, value, onChange }) => {
   const stars = [];

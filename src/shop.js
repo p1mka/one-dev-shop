@@ -6,7 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectIsMenuVisible } from "./store/selectors";
 import { useLayoutEffect } from "react";
 import styled from "styled-components";
-import { setUser } from "./store/actions";
+import { setIsLoading, setProducts, setUser } from "./store/actions";
+import { request } from "./utils";
 
 const AppColumn = styled.div`
   position: relative;
@@ -32,6 +33,15 @@ function Shop() {
 
     const userData = JSON.parse(currentUserJSON);
     dispatch(setUser(userData));
+  }, [dispatch]);
+
+  useLayoutEffect(() => {
+    dispatch(setIsLoading(true));
+    request("/products")
+      .then(({ error, data }) => {
+        return dispatch(setProducts(data));
+      })
+      .finally(() => dispatch(setIsLoading(false)));
   }, [dispatch]);
 
   const isMenuVisible = useSelector(selectIsMenuVisible);

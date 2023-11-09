@@ -1,3 +1,5 @@
+import { ACTION_TYPE } from "../actions";
+
 const initialState = {
   id: "",
   img: "",
@@ -5,12 +7,25 @@ const initialState = {
   description: "",
   price: "",
   rating: "0",
+  reviews: [],
 };
 
 export const productReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "GET_PRODUCT": {
-      return { ...state };
+    case ACTION_TYPE.SET_PRODUCT: {
+      return { ...action.payload };
+    }
+    case ACTION_TYPE.SET_PRODUCT_REVIEWS: {
+      return { ...state, reviews: [...state.reviews, action.payload] };
+    }
+    case ACTION_TYPE.SET_PRODUCT_RATING: {
+      return { ...state, rating: action.payload };
+    }
+    case ACTION_TYPE.REMOVE_REVIEW: {
+      return {
+        ...state,
+        reviews: state.reviews.filter((review) => review.id !== action.payload),
+      };
     }
 
     default:

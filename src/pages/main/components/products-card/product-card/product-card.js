@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Rating } from "../rating/rating";
+
 import styled from "styled-components";
-import { Button } from "../../../../../components";
+import { Button, Rating } from "../../../../../components";
 import { Link } from "react-router-dom";
 
 const ProductCardContainer = ({
