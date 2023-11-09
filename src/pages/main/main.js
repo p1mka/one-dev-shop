@@ -16,7 +16,7 @@ const MainContainer = ({ className }) => {
       {isLoading ? (
         <Loader />
       ) : (
-        <>
+        <div className="products-cards">
           <ProductsCard
             products={products.filter((product) => product.rating > 2)}
             header={"Лучшее"}
@@ -27,7 +27,7 @@ const MainContainer = ({ className }) => {
           />
           <ProductsCard products={products} header={"Новинки"} />
           <ProductsCard products={products} header={"Коты"} />
-        </>
+        </div>
       )}
     </div>
   );
@@ -38,4 +38,8 @@ export const Main = styled(MainContainer)`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+
+  & .products-cards {
+    width: 100%;
+  }
 `;

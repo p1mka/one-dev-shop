@@ -20,7 +20,8 @@ const AppColumn = styled.div`
 const Page = styled.div`
   display: flex;
   flex: 1 0 auto;
-  padding: 3rem 10%;
+  padding: 0 10%;
+  margin-top: 6rem;
 `;
 
 function Shop() {

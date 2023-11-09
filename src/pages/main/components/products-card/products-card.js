@@ -7,7 +7,7 @@ const ProductsCardContainer = ({ className, products, header }) => {
   return (
     <div className={className}>
       <div className="header-row">
-        <h1>{header}</h1>
+        <h2>{header}</h2>
         <Link to="/products">
           Все {header.toLowerCase()} <Icon id="la-angle-right" />
         </Link>
@@ -27,16 +27,16 @@ const ProductsCardContainer = ({ className, products, header }) => {
           );
         })}
       </div>
+      <hr />
     </div>
   );
 };
 
 export const ProductsCard = styled(ProductsCardContainer)`
   font-family: rubik;
-  width: 100%;
   display: flex;
   flex-direction: column;
-  margin: 3rem 0;
+  margin-bottom: 2rem;
   padding: 1rem;
   border-radius: 0.5rem;
   box-shadow: 0px 3px 7px 0px rgba(0, 0, 0, 0.25);
@@ -45,10 +45,8 @@ export const ProductsCard = styled(ProductsCardContainer)`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #fff;
-    border-radius: 0.25rem;
-    padding: 0 1rem;
-    box-shadow: 0px 0px 6px 0px #767676;
+    border-radius: 0.5rem;
+    padding: 0 0.5rem;
   }
 
   & .products-row {
@@ -56,6 +54,15 @@ export const ProductsCard = styled(ProductsCardContainer)`
     display: flex;
     gap: 2rem;
     padding: 2rem 0 1rem 0;
+  }
+
+  & h2 {
+    margin: 0;
+  }
+
+  & hr {
+    border: 1px solid #e5e5e5;
+    width: 90%;
   }
 
   & a {

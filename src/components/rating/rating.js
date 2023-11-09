@@ -8,9 +8,8 @@ const RatingContainer = ({ className, value, onChange }) => {
       <Icon
         key={i}
         id={`la-star  ${i <= value ? "las" : "filled"}`}
-        fill="false"
         color="#EB4AAE"
-        onClick={() => onChange(i)}
+        onClick={() => (onChange ? onChange(i) : null)}
       />
     );
   }
@@ -27,6 +26,7 @@ export const Rating = styled(RatingContainer)`
     color: gray;
   }
   & .filled:hover {
-    color: #eb4aae;
+    // color: #eb4aae;
+    cursor: ${({ onChange }) => (onChange ? "pointer" : "default")};
   }
 `;

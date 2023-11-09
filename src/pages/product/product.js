@@ -1,18 +1,33 @@
+/*TODO ref */
 import { useLayoutEffect, useState } from "react";
-
 import { Button, Loader, Rating } from "../../components";
 import { useParams } from "react-router-dom";
 import { getWordForm, request } from "../../utils";
 import { useDispatch, useSelector } from "react-redux";
-import { selectProduct } from "../../store/selectors";
-import styled from "styled-components";
+import { selectProduct, selectProducts } from "../../store/selectors";
 import { setProduct } from "../../store/actions";
 import { Reviews } from "./components/reviews/reviews";
+import { ProductsCard } from "../main/components";
+import styled from "styled-components";
 
 const ProductContainer = ({ className }) => {
-  const product = useSelector(selectProduct);
+  const dispatch = useDispatch();
+  const params = useParams();
+
   const [isLoading, setIsLoading] = useState(false);
   const [isInCart, setIsInCart] = useState(false);
+  useLayoutEffect(() => {
+    setIsLoading(true);
+    request(`/products/${params.id}`)
+      .then(({ error, data }) => {
+        dispatch(setProduct(data));
+      })
+      .finally(() => setIsLoading(false));
+  }, [params.id, dispatch]);
+
+  const product = useSelector(selectProduct);
+  const products = useSelector(selectProducts);
+
   const {
     id: productId,
     title = "123",
@@ -23,22 +38,11 @@ const ProductContainer = ({ className }) => {
     img,
     reviews,
   } = product;
-  const dispatch = useDispatch();
-  const params = useParams();
 
   const discountAmount =
     Math.floor((Number(price) / 100) * Number(discount) * 100) / 100;
 
   const currentPrice = Number(price) - discountAmount;
-
-  useLayoutEffect(() => {
-    setIsLoading(true);
-    request(`/products/${params.id}`)
-      .then(({ error, data }) => {
-        dispatch(setProduct(data));
-      })
-      .finally(() => setIsLoading(false));
-  }, [params.id, dispatch]);
 
   const onAddInCartButtonClick = () => setIsInCart(!isInCart);
 
@@ -77,6 +81,7 @@ const ProductContainer = ({ className }) => {
           </div>
         </div>
       </div>
+      <ProductsCard products={products} header="Похожие товары" />
       <Reviews reviews={reviews} productId={productId} />
     </div>
   );
