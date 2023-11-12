@@ -1,4 +1,5 @@
 import * as yup from "yup";
+import { passwordRegExp } from "../../constants";
 
 export const regSchema = yup.object().shape({
   email: yup
@@ -15,7 +16,7 @@ export const regSchema = yup.object().shape({
     .string()
     .required("Пароль должен быть заполнен")
     .matches(
-      /((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]))/,
+      passwordRegExp,
       "Пароль должен состоять из заглавных букв, строчных букв и цифр"
     )
     .min(6, "Длина пароля должна быть не менее 6 символов")

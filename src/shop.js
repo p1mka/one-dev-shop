@@ -7,6 +7,7 @@ import { useLayoutEffect } from "react";
 import { setIsLoading, setProducts, setUser } from "./store/actions";
 import { request } from "./utils";
 import { updateCart } from "./store/actions/update-cart";
+import { Order } from "./pages/cart/components";
 import styled from "styled-components";
 
 const AppColumn = styled.div`
@@ -71,7 +72,9 @@ function Shop() {
           </Route>
           <Route path="/products" element={<div>Продукты</div>} />
           <Route path="/product/:id" element={<Product />} />
-          <Route path="/cart" element={<Cart />} />
+          <Route path="/cart" element={<Cart />}>
+            <Route path="order" element={<Order />} />
+          </Route>
           <Route path="*" element={<div>Ошибка</div>} />
         </Routes>
       </Page>

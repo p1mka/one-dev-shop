@@ -1,10 +1,4 @@
-import {
-  AuthFormError,
-  Button,
-  Icon,
-  Input,
-  SimpleLoader,
-} from "../../components";
+import { Button, FormError, Icon, Input, SimpleLoader } from "../../components";
 import { useForm } from "react-hook-form";
 import { regSchema } from "../utils";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -103,7 +97,7 @@ const RegistrationContainter = ({ className }) => {
           Зарегистрироваться
         </Button>
 
-        {!!error && <AuthFormError>{error}</AuthFormError>}
+        {!!error && <FormError>{error}</FormError>}
       </form>
     </div>
   );

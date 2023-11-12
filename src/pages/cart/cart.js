@@ -1,9 +1,11 @@
 import { useSelector } from "react-redux";
 import { selectProductsInCart } from "../../store/selectors";
 import { ProductsTable, SummarizeBlock } from "./components";
+import { Outlet, useMatch } from "react-router-dom";
 import styled from "styled-components";
 
 const CartContainer = ({ className }) => {
+  const match = useMatch("/cart");
   const productsInCart = useSelector(selectProductsInCart);
 
   return (
@@ -13,32 +15,11 @@ const CartContainer = ({ className }) => {
         <h3>Товаров пока нет...</h3>
       ) : (
         <div className="cart">
-          <table className="products-table">
-            <thead>
-              <tr>
-                <th>Изображение</th>
-                <th>Наименование</th>
-                <th>Цена</th>
-                <th>Количество</th>
-                <th>Удалить</th>
-              </tr>
-            </thead>
-            <tbody>
-              {productsInCart.map(
-                ({ id, title, price, discount, img, productCount }) => (
-                  <ProductsTable
-                    key={id}
-                    productId={id}
-                    title={title}
-                    price={price}
-                    discount={discount}
-                    img={img}
-                    productCount={productCount}
-                  />
-                )
-              )}
-            </tbody>
-          </table>
+          {match ? (
+            <ProductsTable productsInCart={productsInCart} />
+          ) : (
+            <Outlet />
+          )}
           <SummarizeBlock productsInCart={productsInCart} />
         </div>
       )}

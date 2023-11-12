@@ -1,4 +1,4 @@
-import { AuthFormError, Button, Icon, Input, Loader } from "../../components";
+import { Button, FormError, Icon, Input, Loader } from "../../components";
 import { useForm } from "react-hook-form";
 import { authSchema } from "../utils";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -91,7 +91,7 @@ const AuthorizeContainter = ({ className }) => {
           </Button>
         </div>
 
-        {!!error && <AuthFormError>{error}</AuthFormError>}
+        {!!error && <FormError>{error}</FormError>}
       </form>
       <hr />
       <div className="registration-question-block">

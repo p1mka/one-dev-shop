@@ -5,7 +5,7 @@ export * from "./button/button";
 export * from "./modal-window/modal-window";
 export * from "./loader/loader";
 export * from "./input/input";
-export * from "./auth-form-error/auth-form-error";
+export * from "./form-error/form-error";
 export * from "./dropdown-menu/dropdown-menu";
 export * from "./simple-loader/simple-loader";
 export * from "./rating/rating";

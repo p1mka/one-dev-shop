@@ -1,7 +1,5 @@
-import { useSelector } from "react-redux";
 import styled from "styled-components";
-import { selectUserRole } from "../../../../store/selectors";
-import { ROLES } from "../../../../constants";
+import { useMatch, useNavigate } from "react-router-dom";
 
 const { Button } = require("../../../../components");
 const { getWordForm } = require("../../../../utils");
@@ -13,7 +11,8 @@ const {
 } = require("../../utils");
 
 const SummarizeBlockContainer = ({ className, productsInCart }) => {
-  const userRole = useSelector(selectUserRole);
+  const navigate = useNavigate();
+  const match = useMatch("/cart");
 
   const priceWithoutDiscount = getSumWithoutDiscount(productsInCart);
   const summaryDiscount = getSummaryDiscount(productsInCart);
@@ -21,9 +20,7 @@ const SummarizeBlockContainer = ({ className, productsInCart }) => {
   const summaryCountOfProducts = getSummaryCountOfProducts(productsInCart);
 
   const onCheckoutButtonClick = () => {
-    if (userRole === ROLES.GUEST) {
-      console.log("Надобэ зарегаться....");
-    }
+    navigate("order");
   };
 
   return (
@@ -42,12 +39,18 @@ const SummarizeBlockContainer = ({ className, productsInCart }) => {
         </div>
       )}
       <div className="total-products-and-price">
-        <h3>Итог</h3>
+        <h2>Итог</h2>
         <h2>{summaryPrice.toFixed(2)} ₽</h2>
       </div>
-      <Button iconId="la-check" onClick={onCheckoutButtonClick}>
-        Оформить заказ
-      </Button>
+      {match ? (
+        <Button iconId="la-check" onClick={onCheckoutButtonClick}>
+          Оформить заказ
+        </Button>
+      ) : (
+        <Button type="submit" form="user-form" iconId="la-handshake">
+          Подтвердить заказ!
+        </Button>
+      )}
     </div>
   );
 };
@@ -62,6 +65,7 @@ export const SummarizeBlock = styled(SummarizeBlockContainer)`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-top: 2px solid #2f9ca3;
   }
   & .total-discount {
     display: flex;

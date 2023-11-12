@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const AuthFormError = styled.div`
+export const FormError = styled.div`
   display: flex;
   flex-wrap: nowrap;
   background-color: #fcadad;
@@ -9,4 +9,5 @@ export const AuthFormError = styled.div`
   padding: 10px;
   text-align: center;
   font-size: 14px;
+  width: calc(100% -200px);
 `;

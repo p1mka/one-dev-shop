@@ -8,63 +8,79 @@ const {
   decreaseProductCount,
 } = require("../../../../store/actions");
 
-const ProductsTableContainer = ({
-  className,
-  productId,
-  price,
-  discount,
-  title,
-  img,
-  productCount,
-}) => {
+const ProductsTableContainer = ({ className, productsInCart }) => {
   const dispatch = useDispatch();
 
-  const increaseCount = () => dispatch(increaseProductCount(productId));
-  const decreaseCount = () => dispatch(decreaseProductCount(productId));
+  const increaseCount = (productId) =>
+    dispatch(increaseProductCount(productId));
 
-  const onDeleteButtonClick = () => {
+  const decreaseCount = (productId) =>
+    dispatch(decreaseProductCount(productId));
+
+  const onDeleteButtonClick = (productId) => {
     dispatch(removeProductFromCart(productId));
   };
 
   return (
-    <tr className={className}>
-      <td>
-        <img className="product-image" src={img} alt=""></img>
-      </td>
-      <td className="product-title">
-        <span>{title}</span>
-      </td>
-      <td>
-        <ProductPrice
-          price={price}
-          discount={discount}
-          fontSize="18px"
-          color="#eb4aae"
-        />
-      </td>
+    <table className="products-table">
+      <thead>
+        <tr>
+          <th>Изображение</th>
+          <th>Наименование</th>
+          <th>Цена</th>
+          <th>Количество</th>
+          <th>Удалить</th>
+        </tr>
+      </thead>
+      <tbody>
+        {productsInCart.map(
+          ({ id: productId, title, price, discount, img, productCount }) => (
+            <tr className={className} key={productId}>
+              <td>
+                <img className="product-image" src={img} alt=""></img>
+              </td>
+              <td className="product-title">
+                <span>{title}</span>
+              </td>
+              <td>
+                <ProductPrice
+                  price={price}
+                  discount={discount}
+                  fontSize="18px"
+                  color="#eb4aae"
+                />
+              </td>
 
-      <td>
-        <div className="product-count">
-          <Button
-            iconId="la-minus"
-            iconSize="14px"
-            onClick={decreaseCount}
-            disabled={productCount === 1}
-          />
-          {productCount} шт
-          <Button iconId="la-plus" iconSize="14px" onClick={increaseCount} />
-        </div>
-      </td>
+              <td>
+                <div className="product-count">
+                  <Button
+                    iconId="la-minus"
+                    iconSize="14px"
+                    onClick={() => decreaseCount(productId)}
+                    disabled={productCount === 1}
+                  />
+                  {productCount} шт
+                  <Button
+                    iconId="la-plus"
+                    iconSize="14px"
+                    onClick={() => increaseCount(productId)}
+                  />
+                </div>
+              </td>
 
-      <td className="navigation">
-        <Button
-          onClick={onDeleteButtonClick}
-          iconId="la-trash-alt"
-          iconSize="24px"
-          padding="0"
-        />
-      </td>
-    </tr>
+              <td className="navigation">
+                <Button
+                  onClick={() => onDeleteButtonClick(productId)}
+                  iconId="la-trash-alt"
+                  iconSize="24px"
+                  padding="0"
+                />
+              </td>
+            </tr>
+          )
+        )}
+      </tbody>
+    </table>
   );
 };
 
