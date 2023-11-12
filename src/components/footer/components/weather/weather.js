@@ -4,20 +4,31 @@ import styled from "styled-components";
 const WeatherContainer = ({ className }) => {
   const [weather, setWeather] = useState("");
   const [city, setCity] = useState("");
-  const [temp, setTemp] = useState("");
+  const [temp, setTemp] = useState("") || null;
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(
-      `https://api.openweathermap.org/data/2.5/weather?q=nizhniy novgorod&lang=ru&units=metric&appid=e3d189f7db1b726b9ed6964cbef557c3`
-    )
-      .then((res) => res.json())
-      .then(({ main, name, weather }) => {
+    try {
+      fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=nizhniy novgorod&lang=ru&units=metric&appid=e3d189f7db1b726b9ed6964cbef557c3`
+      ).then(({ main, name, weather }) => {
+        if (!main || name || weather) {
+          setError(`Ошибка загрузки погоды`);
+          return;
+        }
         setTemp(Math.round(main.temp));
         setCity(name);
         setWeather([weather[0].description, weather[0].icon]);
       });
-  }, []);
-  return (
+    } catch (e) {
+      console.log(e);
+      setError(e.message);
+      return;
+    }
+  }, [setTemp]);
+  return error ? (
+    <div>{error}</div>
+  ) : (
     <div className={className}>
       <div className="city">{city}</div>
       <div className="weather-info">

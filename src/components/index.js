@@ -9,3 +9,4 @@ export * from "./auth-form-error/auth-form-error";
 export * from "./dropdown-menu/dropdown-menu";
 export * from "./simple-loader/simple-loader";
 export * from "./rating/rating";
+export * from "./product-price/product-price";

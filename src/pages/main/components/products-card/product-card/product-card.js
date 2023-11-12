@@ -1,55 +1,66 @@
-import { Button, Rating } from "../../../../../components";
+import { useDispatch, useSelector } from "react-redux";
+import { Button, ProductPrice, Rating } from "../../../../../components";
 import { Link } from "react-router-dom";
+import { removeProductFromCart, setCart } from "../../../../../store/actions";
+import { selectProductsInCart } from "../../../../../store/selectors";
 import styled from "styled-components";
 
 const ProductCardContainer = ({
   className,
-  id,
+  id: productId,
   img,
   discount,
   title,
   price,
   rating,
 }) => {
-  const discountAmount =
-    Math.floor((Number(price) / 100) * Number(discount) * 100) / 100;
+  const dispatch = useDispatch();
 
-  const currentPrice = Number(price) - discountAmount;
+  const cart = useSelector(selectProductsInCart);
+
+  const isInCart = cart.find((product) => product.id === productId);
+
+  const onAddProductInCart = () =>
+    dispatch(
+      setCart({
+        id: productId,
+        img,
+        discount,
+        title,
+        price,
+        rating,
+      })
+    );
+  const onRemoveProductFromCart = () => {
+    dispatch(removeProductFromCart(productId));
+  };
 
   return (
     <div className={className}>
       <div className="product-image">
-        <Link to={`/product/${id}`}>
+        <Link to={`/product/${productId}`}>
           <img src={img} alt="Картинка в пути..." />
         </Link>
         {discount > 0 && <div className="discount-block">-{discount}%</div>}
       </div>
       <div className="product-content">
-        <div className="product-price">
-          {discount > 0 ? (
-            <>
-              {currentPrice} ₽<div className="old-price">{price}</div>
-            </>
-          ) : (
-            <>{price} ₽</>
-          )}
-        </div>
+        <ProductPrice price={price} discount={discount} />
         <div className="product-info-and-button">
           <div className="title">
-            <Link to={`/product/${id}`}>{title}</Link>
+            <Link to={`/product/${productId}`}>{title}</Link>
           </div>
           <div>
             <Rating value={rating} />
             <Button
-              includeIcon={false}
-              width="100%"
-              padding=".5rem"
-              border="2px solid #2f9ca3"
-              background="#fff"
-              color="#2f9ca3"
+              onClick={isInCart ? onRemoveProductFromCart : onAddProductInCart}
+              iconId={isInCart ? "la-cart-arrow-down" : "la-cart-plus"}
+              iconSize="34px"
+              background={isInCart ? "#EB4AAE" : "#fff"}
+              color={isInCart ? "#fff" : "#000"}
+              width="10em"
               fontSize="18px"
             >
-              В корзину
+              {isInCart ? "В корзине!" : "В корзину"}
             </Button>
           </div>
         </div>
@@ -85,7 +96,6 @@ export const ProductCard = styled(ProductCardContainer)`
 
   & .discount-block {
     position: absolute;
-    // top: 7rem;
     bottom: 1rem;
     left: 0.5rem;
     z-index: 100;
@@ -110,22 +120,6 @@ export const ProductCard = styled(ProductCardContainer)`
     align-items: flex-start;
     justify-content: flex-start;
     overflow: hidden;
-  }
-  & .product-price {
-    display: flex;
-    color: #000;
-    justify-content: flex-start;
-    font-size: 1.25rem;
-    font-weight: 600;
-    line-height: 150%;
-    text-align: center;
-  }
-  & .old-price {
-    display: flex;
-    text-decoration: line-through solid #2f9ca3;
-    margin: 0 0 0 0.5rem;
-    font-size: 0.9rem;
-    color: #0000008c;
   }
 
   & .product-info-and-button {

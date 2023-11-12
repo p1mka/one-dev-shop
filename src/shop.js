@@ -1,13 +1,13 @@
 import { Routes, Route } from "react-router-dom";
 import { DropDownMenu, Footer, Header, ModalWindow } from "./components";
-import { Authorize, Main, Registration } from "./pages";
-import { Product } from "./pages/product/product";
+import { Authorize, Cart, Main, Product, Registration } from "./pages";
 import { useDispatch, useSelector } from "react-redux";
 import { selectIsMenuVisible } from "./store/selectors";
 import { useLayoutEffect } from "react";
-import styled from "styled-components";
 import { setIsLoading, setProducts, setUser } from "./store/actions";
 import { request } from "./utils";
+import { updateCart } from "./store/actions/update-cart";
+import styled from "styled-components";
 
 const AppColumn = styled.div`
   position: relative;
@@ -37,6 +37,15 @@ function Shop() {
   }, [dispatch]);
 
   useLayoutEffect(() => {
+    const cartJSON = localStorage.getItem("cart");
+    if (!cartJSON) {
+      return;
+    }
+    const cart = JSON.parse(cartJSON);
+    dispatch(updateCart(cart));
+  }, [dispatch]);
+
+  useLayoutEffect(() => {
     dispatch(setIsLoading(true));
     request("/products")
       .then(({ error, data }) => {
@@ -62,6 +71,7 @@ function Shop() {
           </Route>
           <Route path="/products" element={<div>Продукты</div>} />
           <Route path="/product/:id" element={<Product />} />
+          <Route path="/cart" element={<Cart />} />
           <Route path="*" element={<div>Ошибка</div>} />
         </Routes>
       </Page>

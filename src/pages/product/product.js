@@ -1,11 +1,19 @@
-/*TODO ref */
+/*TODO review ref, loader for reviews  */
 import { useLayoutEffect, useState } from "react";
-import { Button, Loader, Rating } from "../../components";
-import { useParams } from "react-router-dom";
+import { Button, Loader, ProductPrice, Rating } from "../../components";
+import { Link, useMatch, useParams } from "react-router-dom";
 import { getWordForm, request } from "../../utils";
 import { useDispatch, useSelector } from "react-redux";
-import { selectProduct, selectProducts } from "../../store/selectors";
-import { setProduct } from "../../store/actions";
+import {
+  selectProduct,
+  selectProducts,
+  selectProductsInCart,
+} from "../../store/selectors";
+import {
+  removeProductFromCart,
+  setCart,
+  setProduct,
+} from "../../store/actions";
 import { Reviews } from "./components/reviews/reviews";
 import { ProductsCard } from "../main/components";
 import styled from "styled-components";
@@ -13,9 +21,10 @@ import styled from "styled-components";
 const ProductContainer = ({ className }) => {
   const dispatch = useDispatch();
   const params = useParams();
+  const match = useMatch(`product/${params.id}`);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [isInCart, setIsInCart] = useState(false);
+
   useLayoutEffect(() => {
     setIsLoading(true);
     request(`/products/${params.id}`)
@@ -27,10 +36,11 @@ const ProductContainer = ({ className }) => {
 
   const product = useSelector(selectProduct);
   const products = useSelector(selectProducts);
+  const cart = useSelector(selectProductsInCart);
 
   const {
     id: productId,
-    title = "123",
+    title,
     description,
     price,
     rating,
@@ -39,16 +49,28 @@ const ProductContainer = ({ className }) => {
     reviews,
   } = product;
 
-  const discountAmount =
-    Math.floor((Number(price) / 100) * Number(discount) * 100) / 100;
+  const isInCart = cart.find((product) => product.id === productId);
 
-  const currentPrice = Number(price) - discountAmount;
-
-  const onAddInCartButtonClick = () => setIsInCart(!isInCart);
+  const onAddProductInCart = () => {
+    dispatch(
+      setCart({
+        id: productId,
+        img,
+        discount,
+        title,
+        price,
+        rating,
+      })
+    );
+  };
+  const onRemoveProductFromCart = () => {
+    console.log(productId);
+    dispatch(removeProductFromCart(productId));
+  };
 
   return isLoading ? (
     <Loader />
-  ) : (
+  ) : match ? (
     <div className={className}>
       <div className="img-and-product-info">
         <img src={img} alt={"Картинка в пути..."} />
@@ -56,17 +78,9 @@ const ProductContainer = ({ className }) => {
         <div className="product-info">
           <h2>{title}</h2>
           <p>{description}</p>
-          <div className="product-price">
-            {discount > 0 ? (
-              <>
-                {currentPrice} ₽<div className="old-price">{price}</div>
-              </>
-            ) : (
-              <>{price} ₽</>
-            )}
-          </div>
+          <ProductPrice price={price} discount={discount} color="#eb4aae" />
           <Button
-            onClick={onAddInCartButtonClick}
+            onClick={isInCart ? onRemoveProductFromCart : onAddProductInCart}
             iconId={isInCart ? "la-cart-arrow-down" : "la-cart-plus"}
             iconSize="34px"
             background={isInCart ? "#EB4AAE" : "#2f9ca3"}
@@ -83,6 +97,37 @@ const ProductContainer = ({ className }) => {
       </div>
       <ProductsCard products={products} header="Похожие товары" />
       <Reviews reviews={reviews} productId={productId} />
+    </div>
+  ) : (
+    <div className={className}>
+      <div className="product-image">
+        <Link to={`/product/${productId}`}>
+          <img src={img} alt="Картинка в пути..." />
+        </Link>
+        {discount > 0 && <div className="discount-block">-{discount}%</div>}
+      </div>
+      <div className="product-content">
+        <ProductPrice price={price} discount={discount} />
+        <div className="product-info-and-button">
+          <div className="title">
+            <Link to={`/product/${productId}`}>{title}</Link>
+          </div>
+          <div>
+            <Rating value={rating} />
+            <Button
+              onClick={isInCart ? onRemoveProductFromCart : onAddProductInCart}
+              iconId={isInCart ? "la-cart-arrow-down" : "la-cart-plus"}
+              iconSize="34px"
+              background={isInCart ? "#EB4AAE" : "#fff"}
+              color={isInCart ? "#fff" : "#000"}
+              width="10em"
+              fontSize="18px"
+            >
+              {isInCart ? "В корзине!" : "В корзину"}
+            </Button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

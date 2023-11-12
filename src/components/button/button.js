@@ -26,7 +26,7 @@ export const Button = styled(ButtonContainer)`
   padding: ${({ padding = "0.2rem 1rem;" }) => padding};
   gap: ${({ gap }) => (gap ? gap : "1rem")};
   border-radius: 0.25rem;
-  border: ${({ border = "1px solid #2f9ca3" }) => border};
+  border: ${({ border = "2px solid #2f9ca3" }) => border};
   background: ${({ disabled, background }) =>
     disabled ? "#2f9ca385" : background ? background : "#2f9ca3"};
   color: ${({ color = "white" }) => color};
@@ -40,6 +40,10 @@ export const Button = styled(ButtonContainer)`
     color: ${({ nohover, disabled }) =>
       nohover ? "default" : disabled ? "default" : "#000"};
     border: ${({ nohover, disabled }) =>
-      nohover || disabled ? "default" : "1px solid #eb4aae"};
+      nohover || disabled ? "default" : "2px solid #eb4aae"};
+  }
+  @media only screen and (max-width: 600px) {
+    padding: 0;
+    font-size: 12px;
   }
 `;

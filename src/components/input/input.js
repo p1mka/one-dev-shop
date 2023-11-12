@@ -1,11 +1,18 @@
 import { forwardRef } from "react";
 import styled from "styled-components";
 
-const InputContainer = forwardRef(({ className, children, ...props }, ref) => (
-  <input className={className} {...props} ref={ref}>
-    {children}
-  </input>
-));
+const InputContainer = forwardRef(
+  ({ className, type, children, ...props }, ref) => (
+    <input
+      className={className}
+      type={type ? type : "default"}
+      {...props}
+      ref={ref}
+    >
+      {children}
+    </input>
+  )
+);
 
 export const Input = styled(InputContainer)`
   height: 1.5rem;
