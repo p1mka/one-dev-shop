@@ -9,7 +9,10 @@ export const localStorageMiddleware = (store) => (next) => (action) => {
     const updatedCart = store.getState().cart;
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   }
-  if (action.type === ACTION_TYPE.CLEAR_CART) {
+  if (
+    action.type === ACTION_TYPE.LOGOUT ||
+    action.type === ACTION_TYPE.CLEAR_CART
+  ) {
     localStorage.removeItem("cart");
   }
   return result;

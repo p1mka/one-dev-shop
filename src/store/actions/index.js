@@ -14,3 +14,6 @@ export * from "./remove-product-from-cart";
 export * from "./increase-product-count";
 export * from "./decrease-product-count";
 export * from "./add-order-async";
+export * from "./set-orders";
+export * from "./get-user-orders-async";
+export * from "./clear-cart";

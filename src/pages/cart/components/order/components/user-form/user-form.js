@@ -11,12 +11,16 @@ import { useState } from "react";
 import { addOrderAsync } from "../../../../../../store/actions/add-order-async";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { getVariablePrice } from "../../../../utils";
+import { getPriceWithDiscount } from "../../../../../../utils";
 
 const UserFormContainer = ({ className }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector(selectUser);
   const productsInCart = useSelector(selectProductsInCart);
+  const { summaryPrice } = getVariablePrice(productsInCart);
+  console.log(summaryPrice);
   const [serverError, setServerError] = useState(null);
 
   const {
@@ -46,13 +50,20 @@ const UserFormContainer = ({ className }) => {
     try {
       dispatch(
         addOrderAsync({
-          products: productsInCart,
+          products: productsInCart.map((product) => ({
+            product: product.id,
+            productCount: product.productCount,
+            currentPrice: getPriceWithDiscount(product.price, product.discount),
+            totalProductPrice:
+              getPriceWithDiscount(product.price, product.discount) *
+              product.productCount,
+          })),
           owner: { name, email, phone, address },
+          totalPrice: summaryPrice,
         })
       );
       reset();
-
-      // navigate("/");
+      navigate("/orders");
     } catch (e) {
       setServerError(e.message);
     }

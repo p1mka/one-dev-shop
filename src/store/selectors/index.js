@@ -8,3 +8,4 @@ export * from "./select-server-error";
 export * from "./select-user";
 export * from "./select-user-role";
 export * from "./select-products-in-cart";
+export * from "./select-orders";

@@ -1,27 +1,26 @@
-import styled from "styled-components";
 import { useMatch, useNavigate } from "react-router-dom";
-
-const { Button } = require("../../../../components");
-const { getWordForm } = require("../../../../utils");
-const {
-  getSumWithoutDiscount,
-  getSummaryDiscount,
-  getSummaryPrice,
-  getSummaryCountOfProducts,
-} = require("../../utils");
+import { ROLES } from "../../../../constants";
+import { selectUserRole } from "../../../../store/selectors";
+import { useSelector } from "react-redux";
+import { Button } from "../../../../components";
+import { getWordForm } from "../../../../utils";
+import styled from "styled-components";
+import { getSummaryCountOfProducts, getVariablePrice } from "../../utils";
 
 const SummarizeBlockContainer = ({ className, productsInCart }) => {
   const navigate = useNavigate();
   const match = useMatch("/cart");
+  const userRole = useSelector(selectUserRole);
 
-  const priceWithoutDiscount = getSumWithoutDiscount(productsInCart);
-  const summaryDiscount = getSummaryDiscount(productsInCart);
-  const summaryPrice = getSummaryPrice(productsInCart);
+  const { summaryPrice, summaryDiscount, priceWithoutDiscount } =
+    getVariablePrice(productsInCart);
   const summaryCountOfProducts = getSummaryCountOfProducts(productsInCart);
 
   const onCheckoutButtonClick = () => {
     navigate("order");
   };
+
+  const onAuthorizeButtonClick = () => navigate("/authorize");
 
   return (
     <div className={className}>
@@ -43,9 +42,15 @@ const SummarizeBlockContainer = ({ className, productsInCart }) => {
         <h2>{summaryPrice.toFixed(2)} ₽</h2>
       </div>
       {match ? (
-        <Button iconId="la-check" onClick={onCheckoutButtonClick}>
-          Оформить заказ
-        </Button>
+        userRole === ROLES.GUEST ? (
+          <Button includeIcon={false} onClick={onAuthorizeButtonClick}>
+            Для оформления заказа авторизуйтесь...
+          </Button>
+        ) : (
+          <Button iconId="la-check" onClick={onCheckoutButtonClick}>
+            Оформить заказ
+          </Button>
+        )
       ) : (
         <Button type="submit" form="user-form" iconId="la-handshake">
           Подтвердить заказ!

@@ -1,13 +1,20 @@
 import styled from "styled-components";
 import { Icon } from "../../../../../../components";
 import { useSelector } from "react-redux";
-import { selectProductsInCart } from "../../../../../../store/selectors";
+import {
+  selectOrders,
+  selectProductsInCart,
+} from "../../../../../../store/selectors";
 import { useNavigate } from "react-router-dom";
 
 const UserToolsContainer = ({ className }) => {
   const navigate = useNavigate();
-  const productsInCart = useSelector(selectProductsInCart);
+  const productsInCartCount = useSelector(selectProductsInCart).length;
+  const ordersCount = useSelector(selectOrders).length;
+
   const onCartButtonClick = () => navigate("/cart");
+  const onOrdersButtonClick = () => navigate("/orders");
+
   return (
     <div className={className}>
       <div className="elements-column">
@@ -16,14 +23,19 @@ const UserToolsContainer = ({ className }) => {
         <span>Избранное</span>
       </div>
       <div className="elements-column">
-        <Icon id="la-handshake" size="24px" />
+        <Icon id="la-handshake" size="24px" onClick={onOrdersButtonClick} />
+        {ordersCount !== 0 && (
+          <div className="circle" onClick={onOrdersButtonClick}>
+            {ordersCount}
+          </div>
+        )}
         <span>Заказы</span>
       </div>
       <div className="elements-column">
         <Icon id="la-shopping-cart" size="24px" onClick={onCartButtonClick} />
-        {productsInCart.length !== 0 && (
+        {productsInCartCount !== 0 && (
           <div className="circle" onClick={onCartButtonClick}>
-            {productsInCart.length}
+            {productsInCartCount}
           </div>
         )}
         <span>Корзина</span>

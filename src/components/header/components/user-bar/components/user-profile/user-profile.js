@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button, Icon } from "../../../../../../components";
 import { logout, setIsModalOpen } from "../../../../../../store/actions";
 import { selectUser } from "../../../../../../store/selectors";
+
 import { ROLES } from "../../../../../../constants";
 import styled from "styled-components";
 
@@ -25,6 +26,8 @@ const UserProfileContainer = ({ className }) => {
   const onLogoutButtonClick = () => {
     dispatch(logout());
     sessionStorage.removeItem("user");
+    dispatch(setIsModalOpen(true));
+    navigate("/authorize");
   };
 
   return (

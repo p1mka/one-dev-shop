@@ -3,3 +3,4 @@ export * from "./registration/registration";
 export * from "./main/main";
 export * from "./product/product";
 export * from "./cart/cart";
+export * from "./orders/orders";

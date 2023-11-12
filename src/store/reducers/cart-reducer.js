@@ -31,8 +31,11 @@ export const cartReducer = (state = initialCartState, action) => {
         return product;
       });
     }
-
     case ACTION_TYPE.CLEAR_CART: {
+      return initialCartState;
+    }
+
+    case ACTION_TYPE.LOGOUT: {
       return initialCartState;
     }
 

@@ -5,6 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  getUserOrdersAsync,
   setIsModalOpen,
   setIsPasswordVisible,
   setUser,
@@ -48,6 +49,7 @@ const AuthorizeContainter = ({ className }) => {
         }
         dispatch(setUser(data));
         sessionStorage.setItem("user", JSON.stringify(data));
+        dispatch(getUserOrdersAsync());
         reset();
         dispatch(setIsModalOpen(false));
         navigate("/");
