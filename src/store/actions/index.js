@@ -17,3 +17,8 @@ export * from "./add-order-async";
 export * from "./set-orders";
 export * from "./get-user-orders-async";
 export * from "./clear-cart";
+export * from "./update-user-async";
+export * from "./remove-user-async";
+export * from "./update-product-async";
+export * from "./remove-product-async";
+export * from "./add-product-async";

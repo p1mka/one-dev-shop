@@ -25,6 +25,7 @@ const MenuButtonContainer = ({ className }) => {
 
 export const MenuButton = styled(MenuButtonContainer)`
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: flex-end;
   width: 15%;

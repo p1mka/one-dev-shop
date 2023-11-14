@@ -14,6 +14,7 @@ const LogoContainer = ({ className }) => {
 
 export const Logo = styled(LogoContainer)`
   display: flex;
+  flex-wrap: wrap;
   flex-direction: column;
   align-items: flex-start;
   width: 15%;

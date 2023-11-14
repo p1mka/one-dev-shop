@@ -18,6 +18,7 @@ export const Header = styled(HeaderContainer)`
   right: 5px;
   z-index: 300;
   display: flex;
+
   align-items: center;
   background: #fff;
   padding: 1rem 10%;

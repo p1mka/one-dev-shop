@@ -57,13 +57,16 @@ const RegistrationContainter = ({ className }) => {
           setServerError(error);
           return;
         }
-        reset();
+
         dispatch(setUser(data));
         sessionStorage.setItem("user", JSON.stringify(data));
-        dispatch(setIsModalOpen(false));
-        navigate("/");
       })
-      .finally(() => setIsAwait(false));
+      .finally(() => {
+        dispatch(setIsModalOpen(false));
+        reset();
+        setIsAwait(false);
+        navigate("/");
+      });
   };
 
   return (

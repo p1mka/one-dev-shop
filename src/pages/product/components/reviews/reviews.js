@@ -48,7 +48,7 @@ const ReviewsContainer = ({ className, reviews, productId }) => {
           <div key={reviewId} className="reviews">
             <div className="review-owner">
               <Icon id="la-user" size="34px" />
-              <h3>{author.login}</h3>
+              <h3>{author}</h3>
               {userRole === ROLES.ADMIN && (
                 <Icon
                   onClick={() => onReviewRemove(reviewId)}

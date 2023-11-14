@@ -20,7 +20,7 @@ const UserProfileContainer = ({ className }) => {
   };
 
   const onMyCabinetButtonClick = () => {
-    navigate("/my-cabinet");
+    navigate("/cabinet/my-profile");
   };
 
   const onLogoutButtonClick = () => {

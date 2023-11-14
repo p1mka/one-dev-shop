@@ -1,14 +1,27 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Loader } from "../../components";
 import { ProductsCard } from "./components";
 import { selectIsLoading, selectProducts } from "../../store/selectors";
 
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
+import { useLayoutEffect } from "react";
+import { setIsLoading, setProducts } from "../../store/actions";
+import { request } from "../../utils";
 
 const MainContainer = ({ className }) => {
+  const dispatch = useDispatch();
   const products = useSelector(selectProducts);
   const isLoading = useSelector(selectIsLoading);
+
+  useLayoutEffect(() => {
+    dispatch(setIsLoading(true));
+    request("/products")
+      .then(({ error, data }) => {
+        return dispatch(setProducts(data));
+      })
+      .finally(() => dispatch(setIsLoading(false)));
+  }, [dispatch]);
 
   return (
     <div className={className}>

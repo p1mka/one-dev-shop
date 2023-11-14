@@ -10,3 +10,4 @@ export * from "./dropdown-menu/dropdown-menu";
 export * from "./simple-loader/simple-loader";
 export * from "./rating/rating";
 export * from "./product-price/product-price";
+export * from "./table/table";

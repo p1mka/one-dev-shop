@@ -12,6 +12,7 @@ const SearchContainer = ({ className }) => {
 
 export const Search = styled(SearchContainer)`
   display: flex;
+
   align-items: center;
   border: 2px solid #2f9ca3;
   border-radius: 0.25rem;

@@ -16,6 +16,7 @@ const InputContainer = forwardRef(
 );
 
 export const Input = styled(InputContainer)`
+  width: ${({ width }) => width};
   height: 1.5rem;
   padding: 0.5rem;
   border: 1px solid #2f9ca3;

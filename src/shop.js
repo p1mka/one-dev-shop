@@ -1,14 +1,22 @@
 import { Routes, Route } from "react-router-dom";
 import { DropDownMenu, Footer, Header, ModalWindow } from "./components";
-import { Authorize, Cart, Main, Orders, Product, Registration } from "./pages";
+import {
+  Authorize,
+  Cabinet,
+  Cart,
+  Main,
+  Orders,
+  Product,
+  Registration,
+} from "./pages";
 import { useDispatch, useSelector } from "react-redux";
 import { selectIsMenuVisible } from "./store/selectors";
 import { useLayoutEffect } from "react";
-import { setIsLoading, setOrders, setProducts, setUser } from "./store/actions";
-import { request } from "./utils";
+import { getUserOrdersAsync, setUser } from "./store/actions";
 import { updateCart } from "./store/actions/update-cart";
 import { Order } from "./pages/cart/components";
 import styled from "styled-components";
+import { AdminPage, UserProfile } from "./pages/cabinet/components";
 
 const AppColumn = styled.div`
   position: relative;
@@ -35,6 +43,7 @@ function Shop() {
 
     const userData = JSON.parse(currentUserJSON);
     dispatch(setUser(userData));
+    dispatch(getUserOrdersAsync());
   }, [dispatch]);
 
   useLayoutEffect(() => {
@@ -44,22 +53,6 @@ function Shop() {
     }
     const cart = JSON.parse(cartJSON);
     dispatch(updateCart(cart));
-  }, [dispatch]);
-
-  useLayoutEffect(() => {
-    dispatch(setIsLoading(true));
-    request("/products")
-      .then(({ error, data }) => {
-        return dispatch(setProducts(data));
-      })
-      .finally(() => dispatch(setIsLoading(false)));
-  }, [dispatch]);
-
-  useLayoutEffect(() => {
-    dispatch(setIsLoading(true));
-    request("/orders")
-      .then(({ error, data }) => dispatch(setOrders(data)))
-      .finally(() => dispatch(setIsLoading(false)));
   }, [dispatch]);
 
   const isMenuVisible = useSelector(selectIsMenuVisible);
@@ -83,6 +76,11 @@ function Shop() {
             <Route path="order" element={<Order />} />
           </Route>
           <Route path="/orders" element={<Orders />} />
+          <Route path="/cabinet" element={<Cabinet />}>
+            <Route path="my-orders" element={<Orders />} />
+            <Route path="my-profile" element={<UserProfile />} />
+            <Route path="administrate" element={<AdminPage />} />
+          </Route>
           <Route path="*" element={<div>Ошибка</div>} />
         </Routes>
       </Page>

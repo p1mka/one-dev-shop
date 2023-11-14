@@ -24,12 +24,18 @@ const OrderCardContainer = ({
       </h3>{" "}
       <div className="order">
         <div className="images">
-          {products.map(({ id, img }) => (
-            <div key={id} className="order-image">
+          {products.map(({ id: productId, img, title }) => (
+            <div
+              key={productId || Date.now()}
+              className="order-image"
+              title={title}
+            >
               <img
                 src={img}
                 alt="Картинка..."
-                onClick={() => onProductImageClick(id)}
+                onClick={
+                  productId ? () => onProductImageClick(productId) : null
+                }
               ></img>
             </div>
           ))}
@@ -62,6 +68,7 @@ export const OrderCard = styled(OrderCardContainer)`
     height: 7rem;
     object-fit: cover;
     border-radius: 0.25rem;
+    cursor: pointer;
   }
   & .order-info {
     display: flex;

@@ -1,16 +1,17 @@
 import { ACTION_TYPE } from "../actions";
 
-const initialState = {
+const initialProductState = {
   id: "",
   img: "",
   title: "",
   description: "",
-  price: "",
-  rating: "0",
+  price: 0,
+  rating: 0,
+  amount: 0,
   reviews: [],
 };
 
-export const productReducer = (state = initialState, action) => {
+export const productReducer = (state = initialProductState, action) => {
   switch (action.type) {
     case ACTION_TYPE.SET_PRODUCT: {
       return { ...action.payload };
