@@ -1,20 +1,15 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Button, ProductPrice, Rating } from "../../../../../components";
 import { Link } from "react-router-dom";
-import { removeProductFromCart, setCart } from "../../../../../store/actions";
-import { selectProductsInCart } from "../../../../../store/selectors";
+import { removeProductFromCart, setCart } from "../../store/actions";
+import { selectProductsInCart } from "../../store/selectors";
+import { ProductPrice } from "../product-price/product-price";
+import { Rating } from "../rating/rating";
+import { Button } from "../button/button";
 import styled from "styled-components";
 
-const ProductCardContainer = ({
-  className,
-  id: productId,
-  img,
-  discount,
-  title,
-  price,
-  rating,
-}) => {
+const ProductCardContainer = ({ className, product }) => {
   const dispatch = useDispatch();
+  const { id: productId, title, img, discount, price, rating } = product;
 
   const cart = useSelector(selectProductsInCart);
 
@@ -70,8 +65,8 @@ const ProductCardContainer = ({
 };
 
 export const ProductCard = styled(ProductCardContainer)`
-  width: 280px;
-  height: 100%;
+  width: 240px;
+  min-height: 100%;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -116,16 +111,17 @@ export const ProductCard = styled(ProductCardContainer)`
 
   & .title {
     display: flex;
-    height: 4rem;
+    height: 1.3rem;
     align-items: flex-start;
     justify-content: flex-start;
-    overflow: hidden;
+    white-space: nowrap;
+    overflow: scroll;
+    text-overflow: ellipsis;
   }
 
   & .product-info-and-button {
     display: flex;
     flex-direction: column;
-
-    margin: 1.5rem 0 0 0;
+    // margin: 1rem 0 0 0;
   }
 `;

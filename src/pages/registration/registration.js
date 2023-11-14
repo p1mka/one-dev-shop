@@ -72,36 +72,39 @@ const RegistrationContainter = ({ className }) => {
   return (
     <div className={className}>
       <h2> Регистрация </h2>
-      {isAwait && <SimpleLoader />}
-      <form onSubmit={handleSubmit(onFormSubmit)}>
-        <Input type="text" placeholder="E-mail" {...register("email")} />
-        <Input type="text" placeholder="Логин" {...register("login")} />
-        <Input
-          type={isPasswordVisible ? "text" : "password"}
-          placeholder="Пароль"
-          {...register("password")}
-        />
-        <Icon
-          id={isPasswordVisible ? "la-eye-slash" : "la-eye"}
-          onClick={onPassViewClickOrExit}
-        />
+      {isAwait ? (
+        <SimpleLoader />
+      ) : (
+        <form onSubmit={handleSubmit(onFormSubmit)}>
+          <Input type="text" placeholder="E-mail" {...register("email")} />
+          <Input type="text" placeholder="Логин" {...register("login")} />
+          <Input
+            type={isPasswordVisible ? "text" : "password"}
+            placeholder="Пароль"
+            {...register("password")}
+          />
+          <Icon
+            id={isPasswordVisible ? "la-eye-slash" : "la-eye"}
+            onClick={onPassViewClickOrExit}
+          />
 
-        <Input
-          type={isPasswordVisible ? "text" : "password"}
-          placeholder="Повтор пароля"
-          {...register("passwordCheck")}
-        />
-        <Button
-          includeIcon={false}
-          padding=".5rem 2rem;"
-          type="submit"
-          disabled={!!formError}
-        >
-          Зарегистрироваться
-        </Button>
+          <Input
+            type={isPasswordVisible ? "text" : "password"}
+            placeholder="Повтор пароля"
+            {...register("passwordCheck")}
+          />
+          <Button
+            includeIcon={false}
+            padding=".5rem 2rem;"
+            type="submit"
+            disabled={!!formError}
+          >
+            Зарегистрироваться
+          </Button>
 
-        {!!error && <FormError>{error}</FormError>}
-      </form>
+          {!!error && <FormError>{error}</FormError>}
+        </form>
+      )}
     </div>
   );
 };

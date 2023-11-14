@@ -19,10 +19,11 @@ export const Input = styled(InputContainer)`
   width: ${({ width }) => width};
   height: 1.5rem;
   padding: 0.5rem;
-  border: 1px solid #2f9ca3;
+  border: ${({ border = "1px solid #2f9ca3" }) => border};
   border-radius: 0.25rem;
   box-shadow: 0px 3px 10px 0px rgba(112, 192, 91, 0.2);
   font-size: 18px;
+  outline: none;
 
   & input[type="number"]::-webkit-outer-spin-button,
   input[type="number"]::-webkit-inner-spin-button {
