@@ -7,6 +7,7 @@ import {
   Main,
   Orders,
   Product,
+  ProductsByCategory,
   Registration,
 } from "./pages";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,8 +16,8 @@ import { useLayoutEffect } from "react";
 import { getUserOrdersAsync, setUser } from "./store/actions";
 import { updateCart } from "./store/actions/update-cart";
 import { Order } from "./pages/cart/components";
-import styled from "styled-components";
 import { AdminPage, UserProfile } from "./pages/cabinet/components";
+import styled from "styled-components";
 
 const AppColumn = styled.div`
   position: relative;
@@ -35,6 +36,7 @@ const Page = styled.div`
 
 function Shop() {
   const dispatch = useDispatch();
+
   useLayoutEffect(() => {
     const currentUserJSON = sessionStorage.getItem("user");
     if (!currentUserJSON) {
@@ -81,6 +83,7 @@ function Shop() {
             <Route path="my-profile" element={<UserProfile />} />
             <Route path="administrate" element={<AdminPage />} />
           </Route>
+          <Route path="/categories/:id" element={<ProductsByCategory />} />
           <Route path="*" element={<div>Ошибка</div>} />
         </Routes>
       </Page>

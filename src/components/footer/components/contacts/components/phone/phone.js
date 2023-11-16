@@ -13,4 +13,8 @@ const PhoneContainer = ({ className }) => {
 export const Phone = styled(PhoneContainer)`
   display: flex;
   align-items: center;
+
+  @media screen and (max-width: 767px) {
+    display: none;
+  }
 `;

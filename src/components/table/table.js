@@ -15,8 +15,13 @@ export const TableData = styled.td`
   padding: 8px;
   border-bottom: 1px solid #ddd;
   max-width: 10rem;
-  word-break: break-all;
 
+  & img {
+    display: flex;
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+  }
   & select {
     font-family: rubik;
     font-size: 16px;

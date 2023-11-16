@@ -13,6 +13,7 @@ export const FooterContainer = ({ className }) => {
 
 export const Footer = styled(FooterContainer)`
   font-family: rubik;
+
   height: 4.5rem;
   flex: 0 0 auto;
   display: flex;

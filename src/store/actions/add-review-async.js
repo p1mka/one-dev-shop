@@ -3,8 +3,8 @@ import { setProductRating } from "./set-product-rating";
 import { setProductReviews } from "./set-product-reviews";
 
 export const addReviewAsync =
-  (productId, reviewText, reviewRating) => (dispatch) => {
-    request(`/products/${productId}/reviews`, "POST", {
+  (productId, reviewText, reviewRating) => async (dispatch) => {
+    await request(`/products/${productId}/reviews`, "POST", {
       reviewText,
       reviewRating,
     }).then(({ error, data }) => {

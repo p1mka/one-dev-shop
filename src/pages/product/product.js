@@ -1,6 +1,12 @@
 /*TODO review ref, loader for reviews  */
-import { useLayoutEffect, useState } from "react";
-import { Button, Loader, ProductPrice, Rating } from "../../components";
+import { useLayoutEffect, useRef, useState } from "react";
+import {
+  Button,
+  CartNotification,
+  Loader,
+  ProductPrice,
+  Rating,
+} from "../../components";
 import { Link, useMatch, useParams } from "react-router-dom";
 import { getWordForm, request } from "../../utils";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,8 +28,10 @@ const ProductContainer = ({ className }) => {
   const dispatch = useDispatch();
   const params = useParams();
   const match = useMatch(`product/${params.id}`);
+  const reviewsRef = useRef(null);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
 
   useLayoutEffect(() => {
     setIsLoading(true);
@@ -62,9 +70,22 @@ const ProductContainer = ({ className }) => {
         rating,
       })
     );
+    setShowNotification(true);
+    setTimeout(() => {
+      setShowNotification(false);
+    }, 2000);
   };
+
+  const onReviewsCountClick = () => {
+    setTimeout(() => {
+      reviewsRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 0);
+  };
+
   const onRemoveProductFromCart = () => {
-    console.log(productId);
     dispatch(removeProductFromCart(productId));
   };
 
@@ -90,13 +111,27 @@ const ProductContainer = ({ className }) => {
             {isInCart ? "В корзине!" : "В корзину"}
           </Button>
           <div className="rating">
-            Рейтинг: <Rating value={rating} /> ({reviews.length}{" "}
-            {getWordForm(reviews.length, "отзыв", "отзыва", "отзывов")})
+            Рейтинг: <Rating value={rating} />{" "}
+            <p onClick={onReviewsCountClick}>
+              ({reviews.length}{" "}
+              {getWordForm(reviews.length, "отзыв", "отзыва", "отзывов")})
+            </p>
           </div>
         </div>
       </div>
       <ProductsCard products={products} header="Похожие товары" />
-      <Reviews reviews={reviews} productId={productId} />
+      <Reviews
+        reviewsRef={reviewsRef}
+        reviews={reviews}
+        productId={productId}
+      />
+      {showNotification && (
+        <CartNotification
+          productName={title}
+          productImage={img}
+          onClose={() => setShowNotification(false)}
+        />
+      )}
     </div>
   ) : (
     <div className={className}>

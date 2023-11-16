@@ -1,46 +1,67 @@
+// TODO disable save button without changes || empty rows
+
 import { Button, Icon, Input } from "../../../../../../../../components";
 import { useEffect, useState } from "react";
+import { request } from "../../../../../../../../utils";
 import styled from "styled-components";
 
 const ProductEditPageContainer = ({
   className,
+  editRef,
   product,
   onProductSave,
   onCancel,
 }) => {
   const [editedProduct, setEditedProduct] = useState(product);
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     setEditedProduct(product);
+    request(`/products/categories`).then(({ error, data }) =>
+      setCategories(data)
+    );
   }, [product]);
 
-  const onInputChange = ({ target }) => {
-    const { name, value } = target;
-    setEditedProduct({ ...editedProduct, [name]: value });
-  };
   const {
     title,
     description,
+    category,
     img,
     price,
     discount = "0",
     amount,
   } = editedProduct;
 
+  const onInputChange = ({ target }) => {
+    const { name, value } = target;
+    setEditedProduct({ ...editedProduct, [name]: value });
+  };
+  const onCategoryChange = ({ target }) => {
+    const selectedCategory = categories.find(
+      (category) => category.id === target.value
+    );
+    setEditedProduct({ ...editedProduct, category: selectedCategory });
+  };
+
   return (
     <div className={className}>
       <Icon id="la-times" size="24px" color="#eb4aae" onClick={onCancel} />
       <h3>Товар {product.title}</h3>
-      <div className="product-info">
+      <div className="product-info" ref={editRef}>
         <div className="image-and-save-button">
           <img src={img} alt="Здесь должна быть картинка" />
-          <Button type="submit" onClick={() => onProductSave(editedProduct)}>
+          <Button
+            includeIcon={false}
+            type="submit"
+            padding="1rem"
+            onClick={() => onProductSave(editedProduct)}
+          >
             Сохранить
           </Button>
         </div>
 
         <div className="rows-column">
-          <div className="image-url">
+          <div className="title">
             <label>URL изображения</label>
             <Input
               name="img"
@@ -50,22 +71,53 @@ const ProductEditPageContainer = ({
             />
           </div>
           <div className="title">
-            <label>Название: </label>
-            <Input name="title" value={title} onChange={onInputChange} />
+            <label>Название </label>
+            <Input
+              name="title"
+              value={title}
+              onChange={onInputChange}
+              required={true}
+            />
+          </div>
+          <div className="title">
+            <label>Категория </label>
+            <select
+              name="category"
+              value={category.id || ""}
+              onChange={onCategoryChange}
+              required={true}
+            >
+              {!product.id && <option value="">Выберите категорию</option>}
+              {categories.map(({ id: categoryId, name: categoryName }) => {
+                return (
+                  // categoryId !== category.id && (
+                  <option key={categoryId} value={categoryId}>
+                    {categoryName}
+                  </option>
+                  // )
+                );
+              })}
+            </select>
           </div>
           <div className="price-and-discount-and-amount">
             <div className="title">
-              <label>Цена: </label>
-              <Input name="price" value={price} onChange={onInputChange} />
+              <label>Цена </label>
+              <Input
+                name="price"
+                value={price}
+                onChange={onInputChange}
+                required={true}
+              />
               <label>₽</label>
             </div>
             <div className="title">
-              <label>Скидка: </label>
+              <label>Скидка </label>
               <Input
                 name="discount"
                 type="number"
                 value={discount}
                 onChange={onInputChange}
+                required={true}
               />
               %
             </div>
@@ -76,6 +128,7 @@ const ProductEditPageContainer = ({
                 type="number"
                 value={amount}
                 onChange={onInputChange}
+                required={true}
               />
               <label>шт.</label>
             </div>
@@ -88,6 +141,7 @@ const ProductEditPageContainer = ({
           name="description"
           value={description}
           onChange={onInputChange}
+          required={true}
         />
       </div>
     </div>
@@ -103,22 +157,18 @@ export const ProductEditPage = styled(ProductEditPageContainer)`
   border-radius: 0.5rem;
   margin: 3rem 0;
   position: relative;
+  background: #f0f0f0;
 
   & i {
     position: absolute;
     right: 1rem;
     top: 1rem;
-    cursor: pointer; /* Добавим курсор указывающий на то, что элемент можно нажать */
+    cursor: pointer;
   }
 
   & .product-info {
     display: flex;
     gap: 3rem;
-  }
-
-  & .image-url {
-    display: flex;
-    flex-direction: column;
   }
 
   & .rows-column {
@@ -147,10 +197,19 @@ export const ProductEditPage = styled(ProductEditPageContainer)`
     gap: 1rem;
     flex-wrap: wrap;
   }
+
+  & select {
+    border: none;
+    font-size: 16px;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+  }
   & textarea {
     width: 100%;
     min-height: 8rem;
     margin: 1rem 0;
     padding: 0.5rem;
+    border: 2px solid #2f9ca3;
+    border-radius: 0.5rem;
   }
 `;

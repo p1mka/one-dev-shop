@@ -54,12 +54,12 @@ export const SearchResults = styled(SearchResultsContainer)`
   gap: 0.5rem;
   padding: 1rem 10%;
   flex-wrap: wrap;
-  position: absolute;
+  position: fixed;
   background: #f0f0f0;
-  width: 100%;
   min-height: 6rem;
-  top: 6rem;
-  left: 0;
+  top: 5.8rem;
+  left: 5px;
+  right: 5px;
   box-shadow: 5px 3px 6px 0px rgba(0, 0, 0, 0.1);
   border-radius: 0.5rem;
   z-index: 300;

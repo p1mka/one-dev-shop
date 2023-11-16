@@ -5,17 +5,22 @@ import { selectProductsInCart } from "../../store/selectors";
 import { ProductPrice } from "../product-price/product-price";
 import { Rating } from "../rating/rating";
 import { Button } from "../button/button";
+import { useState } from "react";
+import { CartNotification } from "../cart-notification/cart-notification";
 import styled from "styled-components";
 
 const ProductCardContainer = ({ className, product }) => {
+  const [showNotification, setShowNotification] = useState(false);
+
   const dispatch = useDispatch();
+
   const { id: productId, title, img, discount, price, rating } = product;
 
   const cart = useSelector(selectProductsInCart);
 
   const isInCart = cart.find((product) => product.id === productId);
 
-  const onAddProductInCart = () =>
+  const onAddProductInCart = () => {
     dispatch(
       setCart({
         id: productId,
@@ -26,6 +31,12 @@ const ProductCardContainer = ({ className, product }) => {
         rating,
       })
     );
+    setShowNotification(true);
+    setTimeout(() => {
+      setShowNotification(false);
+    }, 2000);
+  };
+
   const onRemoveProductFromCart = () => {
     dispatch(removeProductFromCart(productId));
   };
@@ -60,18 +71,25 @@ const ProductCardContainer = ({ className, product }) => {
           </div>
         </div>
       </div>
+      {showNotification && (
+        <CartNotification
+          productName={title}
+          productImage={img}
+          onClose={() => setShowNotification(false)}
+        />
+      )}
     </div>
   );
 };
 
 export const ProductCard = styled(ProductCardContainer)`
   width: 240px;
-  min-height: 100%;
+  height: 300px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border-radius: 0.25rem;
+  border-radius: 1rem;
   background: #fff;
   box-shadow: 5px 3px 6px 0px rgba(0, 0, 0, 0.1);
   font-family: rubik;

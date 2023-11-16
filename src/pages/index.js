@@ -5,3 +5,4 @@ export * from "./product/product";
 export * from "./cart/cart";
 export * from "./orders/orders";
 export * from "./cabinet/cabinet";
+export * from "./products-by-category/products-by-category";

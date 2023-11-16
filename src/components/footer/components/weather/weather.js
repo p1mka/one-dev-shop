@@ -12,7 +12,7 @@ const WeatherContainer = ({ className }) => {
       fetch(
         `https://api.openweathermap.org/data/2.5/weather?q=nizhniy novgorod&lang=ru&units=metric&appid=e3d189f7db1b726b9ed6964cbef557c3`
       ).then(({ main, name, weather }) => {
-        if (!main || name || weather) {
+        if (!main || !name || !weather) {
           setError(`Ошибка загрузки погоды`);
           return;
         }
@@ -21,7 +21,6 @@ const WeatherContainer = ({ className }) => {
         setWeather([weather[0].description, weather[0].icon]);
       });
     } catch (e) {
-      console.log(e);
       setError(e.message);
       return;
     }

@@ -31,15 +31,18 @@ const MainContainer = ({ className }) => {
       ) : (
         <div className="products-cards">
           <ProductsCard
-            products={products.filter((product) => product.rating > 2)}
+            products={products
+              .filter((product) => product.rating > 2)
+              .sort((a, b) => b.rating - a.rating)}
             header={"Лучшее"}
           />
           <ProductsCard
-            products={products.filter((product) => product.discount > 0)}
+            products={products
+              .filter((product) => product.discount > 0)
+              .sort((a, b) => b.discount - a.discount)}
             header={"Скидки"}
           />
           <ProductsCard products={products} header={"Новинки"} />
-          <ProductsCard products={products} header={"Коты"} />
         </div>
       )}
     </div>
@@ -51,8 +54,4 @@ export const Main = styled(MainContainer)`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-
-  & .products-cards {
-    width: 100%;
-  }
 `;

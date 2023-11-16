@@ -35,6 +35,7 @@ export const ProductsPage = () => {
     img: "",
     title: "",
     description: "",
+    category: "",
     price: 0,
     rating: 0,
     amount: 0,
@@ -63,15 +64,17 @@ export const ProductsPage = () => {
     setSelectedProduct(product);
 
     setTimeout(() => {
-      editRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+      editRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
     }, 0);
   };
 
   const onProductSave = async (updatedProduct) => {
     dispatch(setIsLoading(true));
-
     updatedProduct.id
-      ? await dispatch(updateProductAsync(updatedProduct))
+      ? dispatch(updateProductAsync(updatedProduct))
       : dispatch(addProductAsync(updatedProduct));
     dispatch(setIsLoading(false));
     setIsProductEditing(false);
@@ -108,12 +111,13 @@ export const ProductsPage = () => {
           Добавить товар
         </Button>
       </ProductsHeader>
-      <Table ref={editRef}>
+      <Table>
         <thead>
           <tr>
             <TableHead></TableHead>
             <TableHead>Название</TableHead>
-            <TableHead>URL картинки</TableHead>
+            <TableHead>Категория</TableHead>
+            <TableHead>Изображение</TableHead>
             <TableHead>Цена</TableHead>
             <TableHead>Скидка</TableHead>
             <TableHead>Количество</TableHead>
@@ -134,6 +138,7 @@ export const ProductsPage = () => {
       </Table>
       {isProductEditing && (
         <ProductEditPage
+          editRef={editRef}
           product={selectedProduct}
           onProductSave={(updatedProduct) => onProductSave(updatedProduct)}
           onCancel={onCancel}

@@ -1,41 +1,53 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { selectIsMenuVisible } from "../../store/selectors";
-import { setIsLoading, setIsMenuVisible } from "../../store/actions";
+import { setIsMenuVisible } from "../../store/actions";
 import { useLayoutEffect, useState } from "react";
-import { DB_MOCK } from "../../db-mock";
+
+import { SimpleLoader } from "../loaders";
 import styled from "styled-components";
+import { request } from "../../utils";
 
 const DropdownMenuContainer = ({ className }) => {
   const [categories, setCategories] = useState([]);
+  const [isMenuLoading, setIsMenuLoading] = useState(false);
   const isMenuVisible = useSelector(selectIsMenuVisible);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const onMenuClose = () => dispatch(setIsMenuVisible(!isMenuVisible));
 
   useLayoutEffect(() => {
-    dispatch(setIsLoading());
-    new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({ json: () => DB_MOCK.categories });
-      }, 500);
-    })
-      .then((loadedData) => loadedData.json())
-      .then((loadedCategories) => setCategories(loadedCategories))
-      .finally(() => dispatch(setIsLoading()));
-  }, [dispatch, categories]);
+    setIsMenuLoading(true);
+    request("/products/categories")
+      .then(({ error, data }) => setCategories(data))
+      .finally(() => setIsMenuLoading());
+  }, [dispatch]);
+
+  const onCategoryClick = (categoryId) => {
+    dispatch(setIsMenuVisible(false));
+    navigate(`/categories/${categoryId}`);
+  };
 
   return (
     <div className={className} onMouseLeave={onMenuClose}>
-      <ul className="categories">
-        {categories.map(({ id, name }) => {
-          return (
-            <Link className="category" key={id} to="/categories/id">
-              <li>{name}</li>
-            </Link>
-          );
-        })}
-      </ul>
+      {isMenuLoading ? (
+        <SimpleLoader />
+      ) : (
+        <ul className="categories">
+          {categories.map(({ id: categoryId, name }) => {
+            return (
+              <span
+                className="category"
+                key={categoryId}
+                onClick={() => onCategoryClick(categoryId)}
+              >
+                <li>{name}</li>
+              </span>
+            );
+          })}
+        </ul>
+      )}
     </div>
   );
 };
@@ -68,9 +80,16 @@ export const DropDownMenu = styled(DropdownMenuContainer)`
   }
 
   & .category {
+    cursor: pointer;
     display: flex;
     padding: 0 5rem 0 0;
+    transition: color 0.3s ease;
   }
+  & .category:hover {
+    color: #eb4aae;
+    transition: color 0.3s ease;
+  }
+
   @keyframes appear {
     from {
       opacity: 0;

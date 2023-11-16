@@ -1,4 +1,10 @@
-import { Button, Icon, Input, Rating, Loader } from "../../../../components";
+import {
+  Button,
+  Icon,
+  Input,
+  Rating,
+  ReviewsLoader,
+} from "../../../../components";
 import { useState } from "react";
 import { addReviewAsync, removeReviewAsync } from "../../../../store/actions";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,7 +15,7 @@ import { capitalizeFirstLetter } from "../../../../utils";
 
 import styled from "styled-components";
 
-const ReviewsContainer = ({ className, reviews, productId }) => {
+const ReviewsContainer = ({ className, reviews, productId, reviewsRef }) => {
   const dispatch = useDispatch();
   const userRole = useSelector(selectUserRole);
 
@@ -21,28 +27,30 @@ const ReviewsContainer = ({ className, reviews, productId }) => {
     setReviewText(target.value);
   };
 
-  const onAddReviewButtonClick = () => {
+  const onAddReviewButtonClick = async () => {
     setReviewText("");
     setReviewRating(0);
     setIsReviewLoading(true);
-
-    dispatch(addReviewAsync(productId, reviewText, reviewRating));
+    await dispatch(addReviewAsync(productId, reviewText, reviewRating));
     setIsReviewLoading(false);
   };
 
   const onRatingChange = (value) => setReviewRating(value);
 
-  const onReviewRemove = (reviewId) => {
+  const onReviewRemove = async (reviewId) => {
     setIsReviewLoading(true);
-    dispatch(removeReviewAsync(productId, reviewId, setIsReviewLoading));
+
+    await dispatch(removeReviewAsync(productId, reviewId, setIsReviewLoading));
+
     setIsReviewLoading(false);
   };
 
   return (
     <div className={className}>
-      <h1>Отзывы</h1>
+      <h1 ref={reviewsRef}>Отзывы</h1>
       <hr />
       {!reviews.length && <h3>Отзывов пока нет... Оставьте первым!</h3>}
+
       {reviews.map(
         ({ id: reviewId, author, content, createdAt, reviewRating }) => (
           <div key={reviewId} className="reviews">
@@ -67,28 +75,31 @@ const ReviewsContainer = ({ className, reviews, productId }) => {
           </div>
         )
       )}
-      {isReviewLoading && <Loader />}
 
       {userRole !== ROLES.GUEST ? (
-        <>
-          <div className="review-user-rating">
-            <h3> Ваша оценка:</h3>
-            <Rating onChange={onRatingChange} value={reviewRating} />
-          </div>
-          <Input
-            placeholder=" Напишите отзыв здесь..."
-            value={reviewText}
-            onChange={onReviewChange}
-          />
-          <Button
-            type="submit"
-            width="20rem"
-            disabled={!reviewText}
-            onClick={onAddReviewButtonClick}
-          >
-            Добавить
-          </Button>
-        </>
+        isReviewLoading ? (
+          <ReviewsLoader />
+        ) : (
+          <>
+            <div className="review-user-rating">
+              <h3> Ваша оценка:</h3>
+              <Rating onChange={onRatingChange} value={reviewRating} />
+            </div>
+            <Input
+              placeholder=" Напишите отзыв здесь..."
+              value={reviewText}
+              onChange={onReviewChange}
+            />
+            <Button
+              type="submit"
+              width="20rem"
+              disabled={!reviewText}
+              onClick={onAddReviewButtonClick}
+            >
+              Добавить
+            </Button>
+          </>
+        )
       ) : (
         <div>
           Для добавления отзыва <Link to="/authorize">авторизуйтесь...</Link>
@@ -106,7 +117,6 @@ export const Reviews = styled(ReviewsContainer)`
   margin: 1rem 0 0 0;
   padding: 1rem;
   border-radius: 0.5rem;
-  // box-shadow: 0px 3px 7px 0px rgba(0, 0, 0, 0.25);
 
   & .review-owner {
     display: flex;
@@ -117,6 +127,7 @@ export const Reviews = styled(ReviewsContainer)`
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    position: relative;
   }
   & .rating-and-date {
     display: flex;

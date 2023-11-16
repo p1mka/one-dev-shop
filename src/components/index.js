@@ -12,3 +12,6 @@ export * from "./rating/rating";
 export * from "./product-price/product-price";
 export * from "./table/table";
 export * from "./product-card/product-card";
+export * from "./cart-notification/cart-notification";
+export * from "./sidebar/sidebar";
+export * from "./content/content";

@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
-
 import { Icon, ProductCard } from "../../../../components";
 import styled from "styled-components";
 
-const ProductsCardContainer = ({ className, products, header }) => {
+const ProductsCardContainer = ({ className, products = [], header }) => {
   return (
     <div className={className}>
       <div className="header-row">
         <h2>{header}</h2>
+
         <Link to="/products">
           Все {header.toLowerCase()} <Icon id="la-angle-right" />
         </Link>
