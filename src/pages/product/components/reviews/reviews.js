@@ -8,7 +8,7 @@ import {
 import { useState } from "react";
 import { addReviewAsync, removeReviewAsync } from "../../../../store/actions";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUserRole } from "../../../../store/selectors";
+import { selectUserLogin, selectUserRole } from "../../../../store/selectors";
 import { Link } from "react-router-dom";
 import { ROLES } from "../../../../constants";
 import { capitalizeFirstLetter } from "../../../../utils";
@@ -18,6 +18,7 @@ import styled from "styled-components";
 const ReviewsContainer = ({ className, reviews, productId, reviewsRef }) => {
   const dispatch = useDispatch();
   const userRole = useSelector(selectUserRole);
+  const userLogin = useSelector(selectUserLogin);
 
   const [reviewText, setReviewText] = useState("");
   const [reviewRating, setReviewRating] = useState(0);
@@ -57,7 +58,7 @@ const ReviewsContainer = ({ className, reviews, productId, reviewsRef }) => {
             <div className="review-owner">
               <Icon id="la-user" size="34px" />
               <h3>{author}</h3>
-              {userRole === ROLES.ADMIN && (
+              {(userRole === ROLES.ADMIN || userLogin === author) && (
                 <Icon
                   onClick={() => onReviewRemove(reviewId)}
                   id="la-trash-alt"
@@ -65,7 +66,7 @@ const ReviewsContainer = ({ className, reviews, productId, reviewsRef }) => {
               )}
             </div>
             <div className="rating-and-date">
-              <Rating value={reviewRating} />
+              <Rating value={reviewRating} noCount={true} />
               {createdAt}
             </div>
 
@@ -83,7 +84,11 @@ const ReviewsContainer = ({ className, reviews, productId, reviewsRef }) => {
           <>
             <div className="review-user-rating">
               <h3> Ваша оценка:</h3>
-              <Rating onChange={onRatingChange} value={reviewRating} />
+              <Rating
+                onChange={onRatingChange}
+                value={reviewRating}
+                noCount={true}
+              />
             </div>
             <Input
               placeholder=" Напишите отзыв здесь..."

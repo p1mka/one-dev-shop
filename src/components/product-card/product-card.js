@@ -1,20 +1,30 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { removeProductFromCart, setCart } from "../../store/actions";
+import {
+  removeProductFromCart,
+  setCart,
+  setIsShowNotification,
+} from "../../store/actions";
 import { selectProductsInCart } from "../../store/selectors";
 import { ProductPrice } from "../product-price/product-price";
 import { Rating } from "../rating/rating";
 import { Button } from "../button/button";
-import { useState } from "react";
-import { CartNotification } from "../cart-notification/cart-notification";
+import { Amount } from "../amount/amount";
 import styled from "styled-components";
 
 const ProductCardContainer = ({ className, product }) => {
-  const [showNotification, setShowNotification] = useState(false);
-
   const dispatch = useDispatch();
 
-  const { id: productId, title, img, discount, price, rating } = product;
+  const {
+    id: productId,
+    title,
+    img,
+    discount,
+    price,
+    rating,
+    reviewsCount,
+    amount,
+  } = product;
 
   const cart = useSelector(selectProductsInCart);
 
@@ -29,12 +39,14 @@ const ProductCardContainer = ({ className, product }) => {
         title,
         price,
         rating,
+        amount,
       })
     );
-    setShowNotification(true);
+    dispatch(setIsShowNotification(true));
+    clearTimeout();
     setTimeout(() => {
-      setShowNotification(false);
-    }, 2000);
+      dispatch(setIsShowNotification(false));
+    }, 3500);
   };
 
   const onRemoveProductFromCart = () => {
@@ -56,36 +68,40 @@ const ProductCardContainer = ({ className, product }) => {
             <Link to={`/product/${productId}`}>{title}</Link>
           </div>
           <div>
-            <Rating value={rating} />
+            <Amount amount={amount} />
+            <Rating value={rating} reviewsCount={reviewsCount} />
             <Button
+              disabled={amount <= 0}
               onClick={isInCart ? onRemoveProductFromCart : onAddProductInCart}
-              iconId={isInCart ? "la-cart-arrow-down" : "la-cart-plus"}
+              iconId={
+                amount <= 0
+                  ? ""
+                  : isInCart
+                  ? "la-cart-arrow-down"
+                  : "la-cart-plus"
+              }
               iconSize="34px"
               background={isInCart ? "#EB4AAE" : "#fff"}
               color={isInCart ? "#fff" : "#000"}
               width="10em"
               fontSize="18px"
             >
-              {isInCart ? "В корзине!" : "В корзину"}
+              {isInCart
+                ? "В корзине!"
+                : amount <= 0
+                ? "Нет в наличии"
+                : "В корзину"}
             </Button>
           </div>
         </div>
       </div>
-      {showNotification && (
-        <CartNotification
-          productName={title}
-          productImage={img}
-          onClose={() => setShowNotification(false)}
-        />
-      )}
     </div>
   );
 };
 
 export const ProductCard = styled(ProductCardContainer)`
   width: 240px;
-  height: 300px;
-  overflow: hidden;
+  height: 350px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -93,9 +109,15 @@ export const ProductCard = styled(ProductCardContainer)`
   background: #fff;
   box-shadow: 5px 3px 6px 0px rgba(0, 0, 0, 0.1);
   font-family: rubik;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: scale(105%);
+    transition: transform 0.2s;
+  }
 
   & .product-image {
-    height: 150px;
+    height: 200px;
     overflow: hidden;
     position: relative;
     display: flex;
@@ -140,6 +162,5 @@ export const ProductCard = styled(ProductCardContainer)`
   & .product-info-and-button {
     display: flex;
     flex-direction: column;
-    // margin: 1rem 0 0 0;
   }
 `;

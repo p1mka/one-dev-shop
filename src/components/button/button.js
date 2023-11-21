@@ -28,7 +28,7 @@ export const Button = styled(ButtonContainer)`
   border-radius: 0.25rem;
   border: ${({ border = "2px solid #2f9ca3" }) => border};
   background: ${({ disabled, background }) =>
-    disabled ? "#2f9ca385" : background ? background : "#2f9ca3"};
+    disabled ? "#cccccc" : background ? background : "#2f9ca3"};
   color: ${({ color = "white" }) => color};
   font-size: ${({ fontSize = "14px" }) => fontSize};
   font-weight: ${({ bold, fontWeight = "400" }) =>
@@ -45,5 +45,6 @@ export const Button = styled(ButtonContainer)`
   @media only screen and (max-width: 600px) {
     padding: 0;
     font-size: 12px;
+    width: 100px;
   }
 `;

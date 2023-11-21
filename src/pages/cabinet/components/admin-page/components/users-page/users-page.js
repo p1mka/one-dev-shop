@@ -39,11 +39,11 @@ export const UsersPage = () => {
       <Table>
         <thead>
           <tr>
-            <TableHead></TableHead>
-            <TableHead>Логин</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Дата регистрации</TableHead>
-            <TableHead>Статус</TableHead>
+            <TableHead />
+            <TableHead header="Логин" />
+            <TableHead header="Email" />
+            <TableHead header="Дата регистрации" />
+            <TableHead header="Статус" />
           </tr>
         </thead>
         <tbody>

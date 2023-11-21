@@ -1,13 +1,15 @@
 import { useMatch, useNavigate } from "react-router-dom";
 import { ROLES } from "../../../../constants";
 import { selectUserRole } from "../../../../store/selectors";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Button } from "../../../../components";
 import { getWordForm } from "../../../../utils";
-import styled from "styled-components";
 import { getSummaryCountOfProducts, getVariablePrice } from "../../utils";
+import styled from "styled-components";
+import { setIsModalOpen } from "../../../../store/actions";
 
 const SummarizeBlockContainer = ({ className, productsInCart }) => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const match = useMatch("/cart");
   const userRole = useSelector(selectUserRole);
@@ -20,7 +22,10 @@ const SummarizeBlockContainer = ({ className, productsInCart }) => {
     navigate("order");
   };
 
-  const onAuthorizeButtonClick = () => navigate("/authorize");
+  const onAuthorizeButtonClick = () => {
+    dispatch(setIsModalOpen(true));
+    navigate("/authorize");
+  };
 
   return (
     <div className={className}>
@@ -39,7 +44,7 @@ const SummarizeBlockContainer = ({ className, productsInCart }) => {
       )}
       <div className="total-products-and-price">
         <h2>Итог</h2>
-        <h2>{summaryPrice.toFixed(2)} ₽</h2>
+        <h3>{summaryPrice.toFixed(2)} ₽</h3>
       </div>
       {match ? (
         userRole === ROLES.GUEST ? (

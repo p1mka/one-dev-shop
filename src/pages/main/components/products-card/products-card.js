@@ -1,18 +1,62 @@
-import { Link } from "react-router-dom";
-import { Icon, ProductCard } from "../../../../components";
+import { Link, useMatch } from "react-router-dom";
+import { Icon, ProductCard, ReviewsLoader } from "../../../../components";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { selectIsLoading } from "../../../../store/selectors";
 import styled from "styled-components";
 
 const ProductsCardContainer = ({ className, products = [], header }) => {
-  return (
+  const isLoading = useSelector(selectIsLoading);
+  const match = useMatch("/product/:id");
+
+  useEffect(() => {
+    const scrollContainer = document.getElementById("scroll-container");
+    const scrollWidth = scrollContainer.scrollWidth;
+    const clientWidth = scrollContainer.clientWidth;
+
+    const scrollSpeed = 0.9;
+    let scrollPosition = 0;
+
+    const scroll = () => {
+      scrollPosition += scrollSpeed;
+      if (scrollPosition > scrollWidth - clientWidth) {
+        scrollPosition = 0;
+      }
+      scrollContainer.scrollLeft = scrollPosition;
+    };
+
+    const interval = setInterval(scroll, 20);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+  return isLoading ? (
+    <ReviewsLoader />
+  ) : (
     <div className={className}>
       <div className="header-row">
         <h2>{header}</h2>
 
-        <Link to="/products">
-          Все {header.toLowerCase()} <Icon id="la-angle-right" />
-        </Link>
+        {!match && (
+          <Link
+            to={`/${
+              header === "Лучшее"
+                ? "best"
+                : header === "Скидки"
+                ? "discounts"
+                : header === "Новинки"
+                ? "newest"
+                : null
+            }`}
+            state={{ header: header }}
+          >
+            Все {header.toLowerCase()} <Icon id="la-angle-right" />
+          </Link>
+        )}
       </div>
-      <div className="products-row">
+      <div id="scroll-container" className="products-row">
         {products.map((product) => {
           return <ProductCard key={product.id} product={product} />;
         })}
@@ -28,23 +72,23 @@ export const ProductsCard = styled(ProductsCardContainer)`
   flex-wrap: wrap;
   flex-direction: column;
   margin-bottom: 2rem;
-  padding: 1rem;
   border-radius: 0.5rem;
+  // overflow-x: scroll;
 
   & .header-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-radius: 0.5rem;
-    padding: 0 0.5rem;
+    padding: 1rem 0.5rem;
   }
 
   & .products-row {
-    overflow: scroll;
     display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
     gap: 1rem;
-    padding: 2rem 0 1rem 0;
+    // overflow-x: scroll;
+    padding: 1rem 0 1rem 1rem;
   }
 
   & h2 {
@@ -53,7 +97,8 @@ export const ProductsCard = styled(ProductsCardContainer)`
 
   & hr {
     border: 1px solid #e5e5e5;
-    width: 90%;
+    width: 100%;
+    border-radius: 1rem;
   }
 
   & a {

@@ -4,12 +4,12 @@ import styled from "styled-components";
 const { getPriceWithDiscount } = require("../../utils");
 
 const ProductPriceContainer = ({ className, price, discount, ...props }) => {
-  const match = useMatch("/cart");
+  const cartMatch = useMatch("/cart");
 
   return (
     <div className={className} {...props}>
       {discount > 0 ? (
-        <div className={match ? "cart-price" : "default-price"}>
+        <div className={cartMatch ? "cart-price" : "default-price"}>
           {getPriceWithDiscount(price, discount)} ₽
           <div className="old-price">{price}</div>
         </div>
@@ -22,6 +22,7 @@ const ProductPriceContainer = ({ className, price, discount, ...props }) => {
 
 export const ProductPrice = styled(ProductPriceContainer)`
   display: flex;
+
   flex-wrap: wrap;
   color: ${({ discount }) => (discount > 0 ? "#eb4aae" : "#000")};
   font-size: ${({ fontSize = "1.25rem" }) => fontSize};

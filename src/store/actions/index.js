@@ -22,3 +22,4 @@ export * from "./remove-user-async";
 export * from "./update-product-async";
 export * from "./remove-product-async";
 export * from "./add-product-async";
+export * from "./set-is-show-notification";

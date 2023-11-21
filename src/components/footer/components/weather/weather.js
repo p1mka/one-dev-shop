@@ -10,7 +10,7 @@ const WeatherContainer = ({ className }) => {
   useEffect(() => {
     try {
       fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=nizhniy novgorod&lang=ru&units=metric&appid=e3d189f7db1b726b9ed6964cbef557c3`
+        `https://api.openweathermap.org/data/2.5/weather?q=nizhniy novgorod&lang=ru&units=metric&appid=5026c784c208fc4bfd0572ba3d2ab2c2`
       ).then(({ main, name, weather }) => {
         if (!main || !name || !weather) {
           setError(`Ошибка загрузки погоды`);

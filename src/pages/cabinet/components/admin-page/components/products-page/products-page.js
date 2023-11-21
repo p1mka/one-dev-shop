@@ -1,4 +1,10 @@
-import { Button, Loader, Table, TableHead } from "../../../../../../components";
+import {
+  Button,
+  Input,
+  Loader,
+  Table,
+  TableHead,
+} from "../../../../../../components";
 import { useEffect, useRef, useState } from "react";
 import {
   addProductAsync,
@@ -19,14 +25,40 @@ import styled from "styled-components";
 const ProductsHeader = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
+
+  & input {
+    height: auto;
+  }
 `;
 
 export const ProductsPage = () => {
   const dispatch = useDispatch();
-  const products = useSelector(selectProducts);
-  const isLoading = useSelector(selectIsLoading);
+
+  useEffect(() => {
+    dispatch(setIsLoading(true));
+    request("/products")
+      .then(({ error, data }) => {
+        dispatch(setProducts(data));
+      })
+      .finally(() => dispatch(setIsLoading(false)));
+  }, [dispatch]);
+
   const [isProductEditing, setIsProductEditing] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState({});
+  const [searchPhrase, setSearchPhrase] = useState("");
+  const [sortedColumn, setSortedColumn] = useState(null);
+  const [sortDirections, setSortDirections] = useState({
+    title: "up",
+    category: "up",
+    price: "up",
+    discount: "up",
+    amount: "up",
+    rating: "up",
+  });
+
+  const products = useSelector(selectProducts);
+  const isLoading = useSelector(selectIsLoading);
 
   const editRef = useRef(null);
 
@@ -42,14 +74,15 @@ export const ProductsPage = () => {
     reviews: [],
   };
 
-  useEffect(() => {
-    setIsLoading(true);
-    request("/products")
-      .then(({ error, data }) => {
-        dispatch(setProducts(data));
-      })
-      .finally(() => setIsLoading(false));
-  }, [dispatch]);
+  const searchedProducts = searchPhrase
+    ? products.filter(
+        (product) =>
+          product.title.toLowerCase().includes(searchPhrase.toLowerCase()) ||
+          String(product.price)
+            .toLowerCase()
+            .includes(searchPhrase.toLowerCase())
+      )
+    : products;
 
   const onProductCreate = () => {
     setIsProductEditing(true);
@@ -71,11 +104,36 @@ export const ProductsPage = () => {
     }, 0);
   };
 
+  const onSearch = ({ target }) => {
+    setSearchPhrase(target.value);
+  };
+
+  const onSort = (columnName) => {
+    setSortedColumn(columnName);
+    setSortDirections({
+      ...sortDirections,
+      [columnName]: sortDirections[columnName] === "up" ? "down" : "up",
+    });
+  };
+
+  const sortedProducts = searchedProducts.sort((a, b) => {
+    if (sortedColumn) {
+      const valueA = a[sortedColumn];
+      const valueB = b[sortedColumn];
+      if (sortDirections[sortedColumn] === "up") {
+        return valueA > valueB ? 1 : -1;
+      } else {
+        return valueA < valueB ? 1 : -1;
+      }
+    }
+    return 0;
+  });
+
   const onProductSave = async (updatedProduct) => {
     dispatch(setIsLoading(true));
     updatedProduct.id
-      ? dispatch(updateProductAsync(updatedProduct))
-      : dispatch(addProductAsync(updatedProduct));
+      ? await dispatch(updateProductAsync(updatedProduct))
+      : await dispatch(addProductAsync(updatedProduct));
     dispatch(setIsLoading(false));
     setIsProductEditing(false);
 
@@ -102,8 +160,15 @@ export const ProductsPage = () => {
     <div>
       <ProductsHeader>
         <h2>Список товаров магазина</h2>
+        <Input
+          placeholder="Поиск по таблице"
+          width="20rem"
+          type="search"
+          value={searchPhrase}
+          onChange={onSearch}
+        />
         <Button
-          includeIcon={false}
+          iconId="la-plus"
           background="#fff"
           color="#414141"
           onClick={onProductCreate}
@@ -114,18 +179,42 @@ export const ProductsPage = () => {
       <Table>
         <thead>
           <tr>
-            <TableHead></TableHead>
-            <TableHead>Название</TableHead>
-            <TableHead>Категория</TableHead>
-            <TableHead>Изображение</TableHead>
-            <TableHead>Цена</TableHead>
-            <TableHead>Скидка</TableHead>
-            <TableHead>Количество</TableHead>
-            <TableHead>Рейтинг</TableHead>
+            <TableHead />
+            <TableHead
+              header="Название"
+              sortDirection={sortDirections.title}
+              onSort={() => onSort("title")}
+            />
+            <TableHead
+              header="Категория"
+              sortDirection={sortDirections.category}
+              onSort={() => onSort("category")}
+            />
+            <TableHead header="Изображение" />
+            <TableHead
+              header="Цена"
+              sortDirection={sortDirections.price}
+              onSort={() => onSort("price")}
+            />
+            <TableHead
+              header="Скидка"
+              sortDirection={sortDirections.discount}
+              onSort={() => onSort("discount")}
+            />
+            <TableHead
+              header="Количество"
+              sortDirection={sortDirections.amount}
+              onSort={() => onSort("amount")}
+            />
+            <TableHead
+              header="Рейтинг"
+              sortDirection={sortDirections.rating}
+              onSort={() => onSort("rating")}
+            />
           </tr>
         </thead>
         <tbody>
-          {products.map((product, index) => (
+          {sortedProducts.map((product, index) => (
             <ProductRow
               key={product.id}
               product={product}

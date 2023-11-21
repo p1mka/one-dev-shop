@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Loader } from "../../components";
+import { Banner, Loader } from "../../components";
 import { ProductsCard } from "./components";
 import { selectIsLoading, selectProducts } from "../../store/selectors";
 
@@ -23,28 +23,28 @@ const MainContainer = ({ className }) => {
       .finally(() => dispatch(setIsLoading(false)));
   }, [dispatch]);
 
-  return (
+  return isLoading ? (
+    <Loader />
+  ) : (
     <div className={className}>
+      <Banner />
       <Outlet />
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <div className="products-cards">
-          <ProductsCard
-            products={products
-              .filter((product) => product.rating > 2)
-              .sort((a, b) => b.rating - a.rating)}
-            header={"Лучшее"}
-          />
-          <ProductsCard
-            products={products
-              .filter((product) => product.discount > 0)
-              .sort((a, b) => b.discount - a.discount)}
-            header={"Скидки"}
-          />
-          <ProductsCard products={products} header={"Новинки"} />
-        </div>
-      )}
+
+      <div className="products-cards">
+        <ProductsCard
+          products={products
+            .filter((product) => product.rating > 2)
+            .slice(0, 8)}
+          header={"Лучшее"}
+        />
+        <ProductsCard
+          products={products
+            .filter((product) => product.discount > 0)
+            .slice(0, 8)}
+          header={"Скидки"}
+        />
+        <ProductsCard products={products.slice(0, 8)} header={"Новинки"} />
+      </div>
     </div>
   );
 };

@@ -2,6 +2,9 @@ import { useEffect } from "react";
 import styled from "styled-components";
 import { Button } from "../button/button";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { selectProductsInCart } from "../../store/selectors";
+import { setIsShowNotification } from "../../store/actions";
 
 const CartNotificationContainer = styled.div`
   display: flex;
@@ -19,45 +22,59 @@ const CartNotificationContainer = styled.div`
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   z-index: 999;
   font-family: rubik;
-  & p {
+  animation: fadein 0.5s ease-in-out;
+
+  & .products-in-cart {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
     align-items: center;
-    margin: 0 auto;
+    justify-content: space-between;
+    gap: 0.5rem;
   }
-  & p label {
-    font-weight: bold;
-    float: left;
+  & .products-in-cart img {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 80px;
+    height: 80px;
+    object-fit: fill;
   }
-  & p img {
-    width: 150px;
-    height: 150px;
-    object-fit: contain;
+
+  & @keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
 `;
 
-export const CartNotification = ({ productName, productImage, onClose }) => {
+export const CartNotification = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const cart = useSelector(selectProductsInCart);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      onClose();
-    }, 2500);
+      dispatch(setIsShowNotification(false));
+    }, 5000);
 
     return () => {
       clearTimeout(timeout);
     };
-  }, [onClose]);
+  }, [dispatch]);
 
   const onButtonClick = () => navigate("/cart");
 
   return (
     <CartNotificationContainer>
-      <p>
-        <img src={productImage} alt="" />
-        <label>{productName}</label> добавлен в корзину
-      </p>
+      {cart.map((product) => (
+        <div key={product.id} className="products-in-cart">
+          <img src={product.img} alt="" />
+          <div>{product.title}</div>
+        </div>
+      ))}
       <Button
         includeIcon={false}
         background="#fff"

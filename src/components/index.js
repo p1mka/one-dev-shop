@@ -15,3 +15,7 @@ export * from "./product-card/product-card";
 export * from "./cart-notification/cart-notification";
 export * from "./sidebar/sidebar";
 export * from "./content/content";
+export * from "./banner/banner";
+export * from "./input-group/input-group";
+export * from "./breadcrumbs/breadcrumbs";
+export * from "./amount/amount";

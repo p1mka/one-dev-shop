@@ -1,5 +1,3 @@
-// TODO disable save button without changes || empty rows
-
 import { Button, Icon, Input } from "../../../../../../../../components";
 import { useEffect, useState } from "react";
 import { request } from "../../../../../../../../utils";
@@ -90,11 +88,9 @@ const ProductEditPageContainer = ({
               {!product.id && <option value="">Выберите категорию</option>}
               {categories.map(({ id: categoryId, name: categoryName }) => {
                 return (
-                  // categoryId !== category.id && (
                   <option key={categoryId} value={categoryId}>
                     {categoryName}
                   </option>
-                  // )
                 );
               })}
             </select>

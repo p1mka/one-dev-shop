@@ -10,17 +10,20 @@ import { orderFormSchema } from "../../../../../utils";
 import { useState } from "react";
 import { addOrderAsync } from "../../../../../../store/actions/add-order-async";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
 import { getVariablePrice } from "../../../../utils";
 import { getPriceWithDiscount } from "../../../../../../utils";
+import styled from "styled-components";
+import { setIsLoading } from "../../../../../../store/actions";
 
 const UserFormContainer = ({ className }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const user = useSelector(selectUser);
   const productsInCart = useSelector(selectProductsInCart);
+
   const { summaryPrice } = getVariablePrice(productsInCart);
-  console.log(summaryPrice);
+
   const [serverError, setServerError] = useState(null);
 
   const {
@@ -48,6 +51,8 @@ const UserFormContainer = ({ className }) => {
 
   const orderSubmit = ({ name, email, phone, address }) => {
     try {
+      dispatch(setIsLoading(true));
+
       dispatch(
         addOrderAsync({
           products: productsInCart.map((product) => ({

@@ -1,23 +1,13 @@
-/*TODO review ref, loader for reviews  */
-import { useLayoutEffect, useRef, useState } from "react";
-import {
-  Button,
-  CartNotification,
-  Loader,
-  ProductPrice,
-  Rating,
-} from "../../components";
-import { Link, useMatch, useParams } from "react-router-dom";
-import { getWordForm, request } from "../../utils";
+import { useEffect, useRef, useState } from "react";
+import { Button, Loader, ProductPrice, Rating } from "../../components";
+import { useParams } from "react-router-dom";
+import { request } from "../../utils";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  selectProduct,
-  selectProducts,
-  selectProductsInCart,
-} from "../../store/selectors";
+import { selectProduct, selectProductsInCart } from "../../store/selectors";
 import {
   removeProductFromCart,
   setCart,
+  setIsShowNotification,
   setProduct,
 } from "../../store/actions";
 import { Reviews } from "./components/reviews/reviews";
@@ -27,23 +17,28 @@ import styled from "styled-components";
 const ProductContainer = ({ className }) => {
   const dispatch = useDispatch();
   const params = useParams();
-  const match = useMatch(`product/${params.id}`);
+
   const reviewsRef = useRef(null);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [showNotification, setShowNotification] = useState(false);
+  const [similarProducts, setSimilarProducts] = useState([]);
+  const product = useSelector(selectProduct);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     setIsLoading(true);
-    request(`/products/${params.id}`)
-      .then(({ error, data }) => {
-        dispatch(setProduct(data));
-      })
-      .finally(() => setIsLoading(false));
+    const requestData = async () => {
+      await request(`/products/${params.id}`)
+        .then(({ error, data }) => {
+          dispatch(setProduct(data));
+          request(`/products?category=${data.category.id}`).then(
+            ({ error, data }) => setSimilarProducts(data)
+          );
+        })
+        .finally(() => setIsLoading(false));
+    };
+    requestData();
   }, [params.id, dispatch]);
 
-  const product = useSelector(selectProduct);
-  const products = useSelector(selectProducts);
   const cart = useSelector(selectProductsInCart);
 
   const {
@@ -55,6 +50,7 @@ const ProductContainer = ({ className }) => {
     discount,
     img,
     reviews,
+    amount,
   } = product;
 
   const isInCart = cart.find((product) => product.id === productId);
@@ -68,12 +64,13 @@ const ProductContainer = ({ className }) => {
         title,
         price,
         rating,
+        amount,
       })
     );
-    setShowNotification(true);
+    dispatch(setIsShowNotification(true));
     setTimeout(() => {
-      setShowNotification(false);
-    }, 2000);
+      dispatch(setIsShowNotification(false));
+    }, 3500);
   };
 
   const onReviewsCountClick = () => {
@@ -91,78 +88,53 @@ const ProductContainer = ({ className }) => {
 
   return isLoading ? (
     <Loader />
-  ) : match ? (
+  ) : (
     <div className={className}>
       <div className="img-and-product-info">
         <img src={img} alt={"Картинка в пути..."} />
         {discount > 0 && <div className="discount-block">-{discount}%</div>}
         <div className="product-info">
-          <h2>{title}</h2>
+          <h1>{title}</h1>
           <p>{description}</p>
           <ProductPrice price={price} discount={discount} color="#eb4aae" />
           <Button
+            disabled={amount <= 0}
             onClick={isInCart ? onRemoveProductFromCart : onAddProductInCart}
-            iconId={isInCart ? "la-cart-arrow-down" : "la-cart-plus"}
+            iconId={
+              amount <= 0
+                ? ""
+                : isInCart
+                ? "la-cart-arrow-down"
+                : "la-cart-plus"
+            }
             iconSize="34px"
             background={isInCart ? "#EB4AAE" : "#2f9ca3"}
             width="10em"
             fontSize="18px"
           >
-            {isInCart ? "В корзине!" : "В корзину"}
+            {amount <= 0
+              ? "Нет в наличии"
+              : isInCart
+              ? "В корзине!"
+              : "В корзину"}
           </Button>
           <div className="rating">
-            Рейтинг: <Rating value={rating} />{" "}
-            <p onClick={onReviewsCountClick}>
-              ({reviews.length}{" "}
-              {getWordForm(reviews.length, "отзыв", "отзыва", "отзывов")})
-            </p>
+            Рейтинг:{" "}
+            <Rating
+              value={rating}
+              reviewsCount={reviews.length}
+              onReviewsCountClick={onReviewsCountClick}
+            />{" "}
+            <p onClick={onReviewsCountClick}></p>
           </div>
         </div>
       </div>
-      <ProductsCard products={products} header="Похожие товары" />
+      <ProductsCard products={similarProducts} header="Похожие товары" />
       <Reviews
         reviewsRef={reviewsRef}
         reviews={reviews}
         productId={productId}
       />
-      {showNotification && (
-        <CartNotification
-          productName={title}
-          productImage={img}
-          onClose={() => setShowNotification(false)}
-        />
-      )}
-    </div>
-  ) : (
-    <div className={className}>
-      <div className="product-image">
-        <Link to={`/product/${productId}`}>
-          <img src={img} alt="Картинка в пути..." />
-        </Link>
-        {discount > 0 && <div className="discount-block">-{discount}%</div>}
-      </div>
-      <div className="product-content">
-        <ProductPrice price={price} discount={discount} />
-        <div className="product-info-and-button">
-          <div className="title">
-            <Link to={`/product/${productId}`}>{title}</Link>
-          </div>
-          <div>
-            <Rating value={rating} />
-            <Button
-              onClick={isInCart ? onRemoveProductFromCart : onAddProductInCart}
-              iconId={isInCart ? "la-cart-arrow-down" : "la-cart-plus"}
-              iconSize="34px"
-              background={isInCart ? "#EB4AAE" : "#fff"}
-              color={isInCart ? "#fff" : "#000"}
-              width="10em"
-              fontSize="18px"
-            >
-              {isInCart ? "В корзине!" : "В корзину"}
-            </Button>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
@@ -223,7 +195,10 @@ export const Product = styled(ProductContainer)`
     gap: 0.5rem;
   }
 
-  & img {
-    width: 30%;
+  & .img-and-product-info img {
+    max-width: 40%;
+    max-height: 100%;
+    object-fit: cover;
+    border-radius: 1.5rem;
   }
 `;

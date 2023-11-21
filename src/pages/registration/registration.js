@@ -1,4 +1,4 @@
-import { Button, FormError, Icon, Input, SimpleLoader } from "../../components";
+import { Button, FormError, Icon, ReviewsLoader } from "../../components";
 import { useForm } from "react-hook-form";
 import { regSchema } from "../utils";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -13,6 +13,7 @@ import { selectIsPasswordVisible } from "../../store/selectors";
 import { request } from "../../utils";
 import { useState } from "react";
 import styled from "styled-components";
+import { InputGroup } from "../../components/input-group/input-group";
 
 const RegistrationContainter = ({ className }) => {
   const [serverError, setServerError] = useState(null);
@@ -53,19 +54,21 @@ const RegistrationContainter = ({ className }) => {
     dispatch(setIsPasswordVisible(false));
     request("/register", "POST", { login, password, email })
       .then(({ error, data }) => {
-        if (error !== null) {
+        console.log(error);
+        if (error) {
           setServerError(error);
           return;
         }
 
         dispatch(setUser(data));
         sessionStorage.setItem("user", JSON.stringify(data));
-      })
-      .finally(() => {
         dispatch(setIsModalOpen(false));
         reset();
-        setIsAwait(false);
+
         navigate("/");
+      })
+      .finally(() => {
+        setIsAwait(false);
       });
   };
 
@@ -73,25 +76,26 @@ const RegistrationContainter = ({ className }) => {
     <div className={className}>
       <h2> Регистрация </h2>
       {isAwait ? (
-        <SimpleLoader />
+        <ReviewsLoader />
       ) : (
         <form onSubmit={handleSubmit(onFormSubmit)}>
-          <Input type="text" placeholder="E-mail" {...register("email")} />
-          <Input type="text" placeholder="Логин" {...register("login")} />
-          <Input
-            type={isPasswordVisible ? "text" : "password"}
-            placeholder="Пароль"
-            {...register("password")}
+          <InputGroup label="Email" name="email" register={register} />
+          <InputGroup label="Логин" name="login" register={register} />
+          <InputGroup
+            label="Пароль"
+            name="password"
+            register={register}
+            isPasswordVisible={isPasswordVisible}
+          />
+          <InputGroup
+            label="Повтор пароля"
+            name="passwordCheck"
+            register={register}
+            isPasswordVisible={isPasswordVisible}
           />
           <Icon
             id={isPasswordVisible ? "la-eye-slash" : "la-eye"}
             onClick={onPassViewClickOrExit}
-          />
-
-          <Input
-            type={isPasswordVisible ? "text" : "password"}
-            placeholder="Повтор пароля"
-            {...register("passwordCheck")}
           />
           <Button
             includeIcon={false}

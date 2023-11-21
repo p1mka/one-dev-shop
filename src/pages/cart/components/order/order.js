@@ -34,4 +34,5 @@ export const Order = styled(OrderContainer)`
   width: calc(100% - 200px);
   font-family: rubik;
   gap: 2rem;
+  transition: 0.5s ease;
 `;

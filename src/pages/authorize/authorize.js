@@ -1,4 +1,4 @@
-import { Button, FormError, Icon, Input, Loader } from "../../components";
+import { Button, FormError, Icon, Loader } from "../../components";
 import { useForm } from "react-hook-form";
 import { authSchema } from "../utils";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -13,9 +13,13 @@ import {
 import { selectIsPasswordVisible } from "../../store/selectors";
 import { useState } from "react";
 import { request } from "../../utils";
+import { InputGroup } from "../../components";
 import styled from "styled-components";
 
 const AuthorizeContainter = ({ className }) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [serverError, setServerError] = useState(null);
   const {
     register,
@@ -30,8 +34,6 @@ const AuthorizeContainter = ({ className }) => {
     resolver: yupResolver(authSchema),
   });
   const [isAwait, setIsAwait] = useState(false);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const isPasswordVisible = useSelector(selectIsPasswordVisible);
 
@@ -70,12 +72,13 @@ const AuthorizeContainter = ({ className }) => {
       <h2>Авторизация</h2>
 
       <form onSubmit={handleSubmit(onFormSubmit)}>
-        <div>
-          <Input type="text" placeholder="Логин" {...register("login")} />
-          <Input
-            type={isPasswordVisible ? "text" : "password"}
-            placeholder="Пароль"
-            {...register("password")}
+        <div className="inputs">
+          <InputGroup label="Логин" name="login" register={register} />
+          <InputGroup
+            label="Пароль"
+            name="password"
+            register={register}
+            isPasswordVisible={isPasswordVisible}
           />
           <Icon
             id={isPasswordVisible ? "la-eye-slash" : "la-eye"}
@@ -118,12 +121,8 @@ export const Authorize = styled(AuthorizeContainter)`
   font-family: rubik;
 
   & input {
-    position: relative;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0.2rem 0;
-    font-family: rubik;
+    margin: 0.5rem 0;
   }
 
   & i {

@@ -1,12 +1,12 @@
-import styled from "styled-components";
-
-const { useDispatch } = require("react-redux");
-const { ProductPrice, Button } = require("../../../../components");
-const {
-  removeProductFromCart,
-  increaseProductCount,
+import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
+import {
   decreaseProductCount,
-} = require("../../../../store/actions");
+  increaseProductCount,
+  removeProductFromCart,
+} from "../../../../store/actions";
+import { Button, ProductPrice } from "../../../../components";
+import styled from "styled-components";
 
 const ProductsTableContainer = ({ className, productsInCart }) => {
   const dispatch = useDispatch();
@@ -34,50 +34,63 @@ const ProductsTableContainer = ({ className, productsInCart }) => {
       </thead>
       <tbody>
         {productsInCart.map(
-          ({ id: productId, title, price, discount, img, productCount }) => (
-            <tr className={className} key={productId}>
-              <td>
-                <img className="product-image" src={img} alt=""></img>
-              </td>
-              <td className="product-title">
-                <span>{title}</span>
-              </td>
-              <td>
-                <ProductPrice
-                  price={price}
-                  discount={discount}
-                  fontSize="18px"
-                  color="#eb4aae"
-                />
-              </td>
-
-              <td>
-                <div className="product-count">
-                  <Button
-                    iconId="la-minus"
-                    iconSize="14px"
-                    onClick={() => decreaseCount(productId)}
-                    disabled={productCount === 1}
+          ({
+            id: productId,
+            amount,
+            title,
+            price,
+            discount,
+            img,
+            productCount,
+          }) => {
+            return (
+              <tr className={className} key={productId}>
+                <td>
+                  <img className="product-image" src={img} alt="" />
+                </td>
+                <td className="product-title">
+                  <Link to={`/product/${productId}`}>
+                    <span>{title}</span>
+                  </Link>
+                </td>
+                <td>
+                  <ProductPrice
+                    price={price}
+                    discount={discount}
+                    fontSize="18px"
+                    color="#eb4aae"
                   />
-                  {productCount} шт
-                  <Button
-                    iconId="la-plus"
-                    iconSize="14px"
-                    onClick={() => increaseCount(productId)}
-                  />
-                </div>
-              </td>
+                </td>
 
-              <td className="navigation">
-                <Button
-                  onClick={() => onDeleteButtonClick(productId)}
-                  iconId="la-trash-alt"
-                  iconSize="24px"
-                  padding="0"
-                />
-              </td>
-            </tr>
-          )
+                <td>
+                  <div className="product-count">
+                    <Button
+                      iconId="la-minus"
+                      iconSize="14px"
+                      onClick={() => decreaseCount(productId)}
+                      disabled={productCount === 1}
+                    />
+                    {productCount} шт
+                    <Button
+                      iconId="la-plus"
+                      iconSize="14px"
+                      onClick={() => increaseCount(productId)}
+                      disabled={productCount === amount}
+                    />
+                  </div>
+                </td>
+
+                <td className="navigation">
+                  <Button
+                    onClick={() => onDeleteButtonClick(productId)}
+                    iconId="la-trash-alt"
+                    iconSize="24px"
+                    padding="0"
+                  />
+                </td>
+              </tr>
+            );
+          }
         )}
       </tbody>
     </table>

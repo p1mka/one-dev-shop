@@ -1,9 +1,6 @@
-import { useState } from "react";
-import { Button, ProductCard, Sidebar } from "../../../../components";
+import { Button, Sidebar } from "../../../../components";
 
-export const SortingProductsBar = ({ products }) => {
-  const [sortedProducts, setSortedProducts] = useState(products);
-
+export const SortingProductsBar = ({ products, setSortedProducts }) => {
   const sortProductsByName = () => {
     const sortedByName = [...products].sort((a, b) =>
       a.title.localeCompare(b.title)
@@ -76,11 +73,6 @@ export const SortingProductsBar = ({ products }) => {
           Сортировать по рейтингу
         </Button>
       </Sidebar>
-      <div className="products-list">
-        {sortedProducts.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
     </div>
   );
 };

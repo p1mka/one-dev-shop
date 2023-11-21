@@ -7,6 +7,7 @@ const initialAppState = {
     isOpen: false,
   },
   isPasswordVisible: false,
+  isShowNotification: false,
 };
 
 export const appReducer = (state = initialAppState, action) => {
@@ -22,6 +23,9 @@ export const appReducer = (state = initialAppState, action) => {
     }
     case ACTION_TYPE.SET_IS_PASSWORD_VISIBLE: {
       return { ...state, isPasswordVisible: action.payload };
+    }
+    case ACTION_TYPE.SET_IS_SHOW_NOTIFICATION: {
+      return { ...state, isShowNotification: action.payload };
     }
     default:
       return state;

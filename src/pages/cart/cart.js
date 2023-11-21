@@ -11,7 +11,6 @@ const CartContainer = ({ className }) => {
   return (
     <div className={className}>
       <h1>Корзина товаров</h1>
-
       {!productsInCart.length ? (
         <h3>Вы не добавили ни одного товара...</h3>
       ) : (
