@@ -57,7 +57,7 @@ function Shop() {
 
     const userData = JSON.parse(currentUserJSON);
     dispatch(setUser(userData));
-    dispatch(getUserOrdersAsync());
+    dispatch(getUserOrdersAsync(userData.id));
   }, [dispatch]);
 
   useLayoutEffect(() => {

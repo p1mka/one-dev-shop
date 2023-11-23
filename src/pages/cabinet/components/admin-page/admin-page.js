@@ -2,7 +2,12 @@
 
 import { useState } from "react";
 import { Button, Content, Sidebar } from "../../../../components";
-import { ProductsPage, UsersPage, CategoriesPage } from "./components";
+import {
+  ProductsPage,
+  UsersPage,
+  CategoriesPage,
+  OrdersPage,
+} from "./components";
 import styled from "styled-components";
 
 const AdminPageContainer = styled.div`
@@ -71,6 +76,7 @@ export const AdminPage = () => {
         {selectedPage === "products" && <ProductsPage />}
         {selectedPage === "users" && <UsersPage />}
         {selectedPage === "categories" && <CategoriesPage />}
+        {selectedPage === "orders" && <OrdersPage />}
       </Content>
     </AdminPageContainer>
   );

@@ -30,7 +30,7 @@ const ProductContainer = ({ className }) => {
       await request(`/products/${params.id}`)
         .then(({ error, data }) => {
           dispatch(setProduct(data));
-          request(`/products?category=${data.category.id}`).then(
+          request(`/products?&category=${data.category.id}&limit=7`).then(
             ({ error, data }) => setSimilarProducts(data)
           );
         })
@@ -196,7 +196,7 @@ export const Product = styled(ProductContainer)`
   }
 
   & .img-and-product-info img {
-    max-width: 40%;
+    max-width: 30%;
     max-height: 100%;
     object-fit: cover;
     border-radius: 1.5rem;

@@ -23,3 +23,5 @@ export * from "./update-product-async";
 export * from "./remove-product-async";
 export * from "./add-product-async";
 export * from "./set-is-show-notification";
+export * from "./remove-order-async";
+export * from "./cancel-order-async";

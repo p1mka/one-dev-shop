@@ -41,7 +41,7 @@ const ReviewsContainer = ({ className, reviews, productId, reviewsRef }) => {
   const onReviewRemove = async (reviewId) => {
     setIsReviewLoading(true);
 
-    await dispatch(removeReviewAsync(productId, reviewId, setIsReviewLoading));
+    await dispatch(removeReviewAsync(productId, reviewId));
 
     setIsReviewLoading(false);
   };
@@ -142,6 +142,7 @@ export const Reviews = styled(ReviewsContainer)`
 
   & .review-content {
     font-size: 18px;
+    word-wrap: break-word;
   }
 
   & h3 {

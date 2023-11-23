@@ -19,7 +19,7 @@ export const SortingProductsBar = ({ products, setSortedProducts }) => {
 
   const sortProductsByAvailability = () => {
     const sortedByAvailability = [...products].sort(
-      (a, b) => a.amount - b.amount
+      (a, b) => b.amount - a.amount
     );
     setSortedProducts(sortedByAvailability);
   };

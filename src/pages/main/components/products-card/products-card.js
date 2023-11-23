@@ -1,6 +1,5 @@
 import { Link, useMatch } from "react-router-dom";
 import { Icon, ProductCard, ReviewsLoader } from "../../../../components";
-import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { selectIsLoading } from "../../../../store/selectors";
 import styled from "styled-components";
@@ -8,29 +7,6 @@ import styled from "styled-components";
 const ProductsCardContainer = ({ className, products = [], header }) => {
   const isLoading = useSelector(selectIsLoading);
   const match = useMatch("/product/:id");
-
-  useEffect(() => {
-    const scrollContainer = document.getElementById("scroll-container");
-    const scrollWidth = scrollContainer.scrollWidth;
-    const clientWidth = scrollContainer.clientWidth;
-
-    const scrollSpeed = 0.9;
-    let scrollPosition = 0;
-
-    const scroll = () => {
-      scrollPosition += scrollSpeed;
-      if (scrollPosition > scrollWidth - clientWidth) {
-        scrollPosition = 0;
-      }
-      scrollContainer.scrollLeft = scrollPosition;
-    };
-
-    const interval = setInterval(scroll, 20);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
 
   return isLoading ? (
     <ReviewsLoader />

@@ -4,7 +4,7 @@ import { setIsLoading, setProducts } from "../../store/actions";
 import { getWordForm, request } from "../../utils";
 import { useParams } from "react-router-dom";
 import { selectIsLoading } from "../../store/selectors";
-import { Button, Loader } from "../../components";
+import { Button, ErrorMessage, Loader } from "../../components";
 import { CategoryProductCard, SortingProductsBar } from "./components";
 import styled from "styled-components";
 
@@ -15,23 +15,30 @@ const ProductsByCategoryContainer = ({ className }) => {
   const [totalProducts, setTotalProducts] = useState(0);
   const [sortedProducts, setSortedProducts] = useState([]);
   const [categoryName, setCategoryName] = useState("");
+  const [error, setError] = useState(null);
 
   const isLoading = useSelector(selectIsLoading);
 
   useEffect(() => {
     dispatch(setIsLoading(true));
     request(`/products?&category=${params.id}&page=${page}&limit=10`)
-      .then(({ error, data }) => {
+      .then(({ error, data, count }) => {
+        if (error) {
+          setError("Товары временно недоступны, мы уже исправляем ситуацию...");
+          return;
+        }
         dispatch(setProducts(data));
         setSortedProducts(data);
         setCategoryName(data[0]?.category?.name || "");
-        setTotalProducts(data.length);
+        setTotalProducts(count);
       })
       .finally(() => dispatch(setIsLoading(false)));
-  }, [dispatch, params.id, params.filter, page]);
+  }, [dispatch, params.id, page]);
 
   return isLoading ? (
     <Loader />
+  ) : error ? (
+    <ErrorMessage>{error}</ErrorMessage>
   ) : (
     <div className={className}>
       {!sortedProducts.length ? (

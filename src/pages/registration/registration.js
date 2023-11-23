@@ -54,7 +54,6 @@ const RegistrationContainter = ({ className }) => {
     dispatch(setIsPasswordVisible(false));
     request("/register", "POST", { login, password, email })
       .then(({ error, data }) => {
-        console.log(error);
         if (error) {
           setServerError(error);
           return;

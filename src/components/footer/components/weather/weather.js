@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const WeatherContainer = ({ className }) => {
+  const WEATHER_URL =
+    "http://api.openweathermap.org/data/2.5/weather?q=nizhniy%20novgorod&lang=ru&units=metric&appid=5026c784c208fc4bfd0572ba3d2ab2c2";
   const [weather, setWeather] = useState("");
   const [city, setCity] = useState("");
   const [temp, setTemp] = useState("") || null;
@@ -9,16 +11,14 @@ const WeatherContainer = ({ className }) => {
 
   useEffect(() => {
     try {
-      fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=nizhniy novgorod&lang=ru&units=metric&appid=5026c784c208fc4bfd0572ba3d2ab2c2`
-      ).then(({ main, name, weather }) => {
-        if (!main || !name || !weather) {
+      fetch(WEATHER_URL).then(({ main, name, weather, ...data }) => {
+        if (!main || !name || !weather || !data) {
           setError(`Ошибка загрузки погоды`);
           return;
         }
-        setTemp(Math.round(main.temp));
+        setTemp(Math.round(main?.temp));
         setCity(name);
-        setWeather([weather[0].description, weather[0].icon]);
+        setWeather([weather[0]?.description, weather[0]?.icon]);
       });
     } catch (e) {
       setError(e.message);

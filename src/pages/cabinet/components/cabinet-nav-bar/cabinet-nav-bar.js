@@ -15,7 +15,7 @@ const CabinetNavBarContainer = ({ className }) => {
             <h3>Мой профиль</h3>
           </Link>
           <Link to="my-orders">
-            <h3>Мои заказы</h3>
+            <h3>История заказов</h3>
           </Link>
           {userRole === ROLES.ADMIN && (
             <div>

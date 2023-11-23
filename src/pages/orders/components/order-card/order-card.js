@@ -1,15 +1,32 @@
 import { useNavigate } from "react-router-dom";
+import { Button, Loader } from "../../../../components";
+import { cancelOrderAsync } from "../../../../store/actions";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import { selectIsLoading } from "../../../../store/selectors";
 
 const OrderCardContainer = ({
   className,
   orderId,
+  status,
   products,
   totalPrice,
   createdAt,
 }) => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  console.log(products);
+  const isLoading = useSelector(selectIsLoading);
+
+  const statusTitle =
+    status === "0"
+      ? "В обработке"
+      : status === "1"
+      ? "Отправлен"
+      : status === "2"
+      ? "Доставлен"
+      : status === "3"
+      ? "Отменён"
+      : "Выполнен";
 
   const totalCountOfProducts = products.reduce(
     (acc, product) => (acc += product.productCount),
@@ -18,7 +35,19 @@ const OrderCardContainer = ({
 
   const onProductImageClick = (productId) => navigate(`/product/${productId}`);
 
-  return (
+  const onOrderCancel = (orderId) => {
+    const cancelConfirm = window.confirm(
+      `Вы действительно хотите отменить заказ ${orderId}?`
+    );
+    if (cancelConfirm) {
+      dispatch(cancelOrderAsync(orderId));
+    }
+    return;
+  };
+
+  return isLoading ? (
+    <Loader />
+  ) : (
     <li className={className}>
       <h3>
         Заказ {orderId.slice(0, 9)} от {createdAt}
@@ -42,15 +71,33 @@ const OrderCardContainer = ({
         </div>
         <div className="order-info">
           <h4>Количество товаров: {totalCountOfProducts}</h4>
-          <h4>Сумма заказа: {totalPrice} ₽</h4>
+          <h4>Сумма заказа: {totalPrice.toFixed(2)} ₽</h4>
         </div>
-        <div className="status">Выполняется</div>
+        <div className="status-and-cancel">
+          <p className="status">{statusTitle}</p>
+          {status !== "5" && status !== "4" && status !== "3" && (
+            <Button
+              iconId="la-times-circle"
+              background="#fff"
+              color="#000"
+              onClick={() => onOrderCancel(orderId)}
+            >
+              Отменить заказ
+            </Button>
+          )}
+        </div>
       </div>
     </li>
   );
 };
 export const OrderCard = styled(OrderCardContainer)`
   width: 100%;
+
+  & .status-and-cancel {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
 
   & .status {
     display: flex;

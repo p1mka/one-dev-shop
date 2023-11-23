@@ -10,18 +10,20 @@ import { useNavigate } from "react-router-dom";
 const UserToolsContainer = ({ className }) => {
   const navigate = useNavigate();
   const productsInCartCount = useSelector(selectProductsInCart).length;
-  const ordersCount = useSelector(selectOrders).length;
+  const ordersCount = useSelector(selectOrders).filter(
+    (order) => order.status !== "4" && order.status !== "3"
+  ).length;
 
   const onCartButtonClick = () => navigate("/cart");
   const onOrdersButtonClick = () => navigate("/orders");
 
   return (
     <div className={className}>
-      <div className="elements-column">
+      {/* <div className="elements-column">
         <Icon id="la-heart" size="24px" fill={true} />
 
         <span>Избранное</span>
-      </div>
+      </div> */}
       <div className="elements-column">
         <Icon id="la-handshake" size="24px" onClick={onOrdersButtonClick} />
         {ordersCount !== 0 && (

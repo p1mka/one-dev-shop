@@ -53,6 +53,11 @@ export const TableData = styled.td`
     border-radius: 0.5rem;
     background: none;
   }
+
+  & .products {
+    display: flex;
+    flex-direction: column;
+  }
 `;
 
 export const RowTableData = styled.td`

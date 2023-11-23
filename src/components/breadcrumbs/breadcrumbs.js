@@ -1,5 +1,6 @@
 import { useLocation, Link } from "react-router-dom";
 import { Icon } from "../icon/icon";
+import { getCorrectPageName } from "../../utils";
 import styled from "styled-components";
 
 const BreadcrumbsContainer = ({ className }) => {
@@ -16,32 +17,13 @@ const BreadcrumbsContainer = ({ className }) => {
 
           return (
             <span key={pathname}>
-              {!isLast && " Главная "}
-              {/* <Icon id="la-arrow-right" /> */}
-              <Link to={routeTo}>
-                {pathname === "orders"
-                  ? "Заказы"
-                  : pathname === "product"
-                  ? "Товар"
-                  : pathname === "cart"
-                  ? "Корзина"
-                  : pathname === "cabinet"
-                  ? "Кабинет пользователя"
-                  : pathname === "my-profile"
-                  ? "Мой профиль"
-                  : pathname === "my-orders"
-                  ? "Мои заказы"
-                  : pathname === "administrate"
-                  ? "Панель администратора"
-                  : pathname === "categories"
-                  ? "Категории"
-                  : pathname === "authorize"
-                  ? "Авторизация"
-                  : pathname === "registration"
-                  ? "Регистрация"
-                  : pathname}
-              </Link>{" "}
+              <span>{!isLast && <Link to="/">Главная</Link>}</span>
               <Icon id="la-arrow-right" />
+              {isLast ? (
+                <span>{getCorrectPageName(pathname)}</span>
+              ) : (
+                <Link to={routeTo}>{getCorrectPageName(pathname)}</Link>
+              )}
             </span>
           );
         })}

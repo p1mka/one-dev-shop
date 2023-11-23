@@ -40,10 +40,10 @@ const AuthorizeContainter = ({ className }) => {
   const formError = errors?.login?.message || errors?.password?.message;
   const error = formError || serverError;
 
-  const onFormSubmit = ({ login, password }) => {
+  const onFormSubmit = async ({ login, password }) => {
     setIsAwait(true);
     dispatch(setIsPasswordVisible(false));
-    request("/login", "POST", { login, password })
+    await request("/login", "POST", { login, password })
       .then(({ error, data }) => {
         if (error) {
           setServerError(error);
@@ -51,7 +51,7 @@ const AuthorizeContainter = ({ className }) => {
         }
         dispatch(setUser(data));
         sessionStorage.setItem("user", JSON.stringify(data));
-        dispatch(getUserOrdersAsync());
+        dispatch(getUserOrdersAsync(data.id));
         reset();
         dispatch(setIsModalOpen(false));
         navigate("/");
